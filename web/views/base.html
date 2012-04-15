@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>       
+        {% block head %}
+            <title>{% block title %}{% endblock %} - My Webpage</title>
+            <link type="text/css" rel="stylesheet" href="web/css/base.css" />
+            <link type="text/css" rel="stylesheet" href="web/css/header.css" />
+            <link type="text/css" rel="stylesheet" href="web/css/forms.css" />
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+            <script type="text/javascript" src="web/js/base.js"></script>
+        {% endblock %}
+    </head>
+    <body>
+
+        {% block header %}
+        <div id="head">
+            <ul id="menu1">
+                <li><a id="hw" href="">Projekt 3</a></li>             
+            </ul>
+            <ul id="menu2">
+                {% if global.userLoggedIn %}
+                <li><a href="#">{{ global.username }}</a></li>
+                <li id="account"></li>
+                {% else %}              
+                <li><a href="register">Register</a></li>
+                <li><a href="login">Login</a></li>
+                {% endif %}
+            </ul>
+            {% if global.userLoggedIn %}
+            <div id="userBar">
+                <ul>
+                    <li><a href="#">0 new pms</a></li>
+                    <li><a href="#">Account settings</a></li>
+                    <li><a href="#">User settings</a></li>
+                    <li><a href="logout">Logout</a></li>   
+                </ul>       
+            </div>
+             {% endif %}
+        </div>
+        {% endblock %}        
+
+
+    	{% block content %}
+        {% endblock %}
+
+
+        <div id="footer">
+            {% block footer %}
+               
+            {% endblock %}
+        </div>
+        {% block scripts %}
+        {% endblock %}        
+    </body>
+</html>

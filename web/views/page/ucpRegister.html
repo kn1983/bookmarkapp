@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+
+{% block title %}Register{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+
+{% endblock %}
+
+{% block content %}
+<div id="topMain">
+	<div class="wrapper">
+		<div id="topPrimary">
+			<div id="breadcrumbs">
+				<a href="{{ global.U_HOME }}" title="Back to startpage">Home</a>
+			</div>
+			<div id="headline">
+				<h1>In the spotlight</h1>
+			</div>
+			<div id="actionBar">
+				<ul>
+					<li class="active">Register</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="bottomMain">
+	<div class="wrapper">
+		<div id="primary">
+			{% if error %}
+				<div class="alert">
+					{% for message in error %}
+						<p>{{ message }}</p>
+					{% endfor %}
+				</div>
+			{% endif %}
+			<div class="msgForm">		
+				<form method="post" action="http://localhost/page/register" id="register">
+					<fieldset>				
+						<label for="username">Username: </label>
+						<input type="text" name="username" id="username" value="{{ data.username }}" />
+
+						<label for="email">E-mail address: </label>
+						<input type="email" name="email" id="email" value="{{ data.email }}" />	
+
+						<label for="password">Password: </label>
+						<input type="password" id="password" name="password" value="{{ data.password }}" />
+
+						<input class="btnGrey" type="submit" name="register" value="Register" />
+						{{ form_token|raw }}
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,523 @@
+/* CSS Reset
+--------------------------------------------------------------------------------------- */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+small {
+	font-size: 11px;
+}
+/* Common
+--------------------------------------------------------------------------------------- */
+body {
+	font: 13px Arial, sans-serif;
+	background: #fff;
+}
+.wrapper {
+	width: 980px;
+	margin: 0 auto;
+}
+h1 {
+	font-size: 28px;
+	color: #191919;
+	text-align: left;
+}
+h2 {
+	font-size: 18px;
+	color: #191919;
+	text-align: left;
+}
+a {
+	color: #336699;
+	text-decoration: none;
+}
+/* Content
+--------------------------------------------------------------------------------------- */
+#topMain {
+	width: 100%;
+	float: left;
+	background: #f0f0f0;
+	border-bottom: 1px solid #ddd;
+	height: 123px;
+}
+#bottomMain {
+	width: 100%;
+	float: left;
+	background: #fff;
+	margin-bottom: 50px;
+}
+#topPrimary {
+	width: 100%;
+	float: left;	
+}
+#primary{
+	width: 690px;
+	margin-right: 20px;
+	float: left;
+}
+#primary {
+	background: #fff;
+}
+#sidebar, #topSidebar {
+	width: 250px;
+	float: left;
+}
+/* topMain
+--------------------------------------------------------------------------------------- */
+#breadcrumbs {
+	margin-top: 10px;
+	height: 30px;
+	width: 690px;
+	float: left;
+}
+#breadcrumbs a{
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 13px;
+	padding: 4px;
+}
+#headline {
+	height: 50px;
+	width: 690px;
+	float: left;	
+}
+#actionBar {
+	width: 100%;
+	height: 34px;
+	float: left;
+}
+#actionBar li {
+	display: inline-block;
+	padding: 8px 15px;
+	float: left;
+	margin: 0px 2px;
+	background: #f5f5f5;
+	font-weight: bold;
+	border: 1px solid #ddd;
+	color: #595959;
+}
+#actionBar li a {
+	color: #336699;
+}
+#actionBar li.active {
+	background: #fff;
+	border-top: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-bottom: 1px solid #fff;
+}
+#actionBar li.rightTab, #actionBar li#submit {
+	float: right;
+	margin: 0px 2px;
+}
+/* Sidebar
+--------------------------------------------------------------------------------------- */
+#sidebar h3 {
+	font-size: 14px;
+	color: #595959;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin: 5px 0;
+	padding: 5px 0;
+	width: 250px;
+	border-bottom: 1px solid #e9e9e9;
+}
+#sidebar ul {
+	text-align: left;
+	color: #888;
+	font-size: 14px;
+}
+#sidebar li {
+	padding-left: 15px;
+	margin: 2px 0;
+}
+#sidebar p {
+	color: #888;
+}
+#sidebar li span{
+	font-size: 16px;
+	color: #191919;
+}
+#btnCreateAlbum {
+    background: #f3f3f3;
+    border: 1px solid #aaa;
+	border-radius: 5px 5px 5px 5px;
+    cursor: pointer;
+	display: block;
+    padding: 4px 8px;
+	margin: 5px 0px;
+	text-align: center;
+    color: #595959;
+    font-weight: bold;
+}
+/* Icons
+--------------------------------------------------------------------------------------- */
+#sidebar ul.icons {
+	text-align: left;
+	color: #888;
+	font-size: 14px;
+	margin-left: 15px;
+}
+#sidebar ul.icons li{
+	margin: 4px 0;
+	background-repeat: no-repeat;
+	padding-left: 20px;	
+}
+/*--- User page ---*/
+li#followIcon {
+	background-image:url(images/follow.png);
+}
+li#blockIcon {
+	background-image:url(images/block.png);
+}
+li#pmIcon {
+	background-image:url(images/pm.png);
+}
+/*--- Album page ---*/
+li#moderatorIcon {
+	background-image:url(images/moderator.png);
+}
+li#bannedIcon {
+	background-image:url(images/block.png);
+}
+li#reportedIcon {
+	background-image:url(images/reported.png);
+}
+li#settingsIcon {
+	background-image:url(images/settings.png);
+}
+li#logIcon {
+	background-image:url(images/log.png);
+}
+
+/* Imagerow
+--------------------------------------------------------------------------------------- */
+.row {
+	text-align: left;
+	color: #888;
+}
+.row img {
+	border: 1px solid #ddd;
+	padding: 1px;
+}
+.row strong {
+	color: #595959;
+}
+.row > li.unread {
+	background: #fffedb;
+}
+.row > li {
+	float: left;
+	padding: 20px 5px;
+	width: 680px;
+	background: #fff;
+	border-bottom: 1px solid #e9e9e9;
+}
+.row > li > p {
+	color: #191919;
+	text-align: center;
+	padding: 30px 0px;
+}
+.imgRank {
+	float: left;
+	padding: 0 5px 0 0;
+	font-size: 10px;
+	color: #bbb;
+	margin-right: 5px;
+	font-family: verdana;
+}
+.imgThumb {
+	width: 75px;
+	float: left;
+	margin-right: 15px;
+}
+.imgInfo {
+	float: left;
+	color: #888;
+	font-size: 12px;	
+}
+.imgInfo  a{
+	color: #336699;
+	text-decoration: none;
+}
+.imgInfo h2 a, .reportInfo h2 a{
+	display: block;
+	margin-bottom: 2px;
+	font-size: 16px;
+	color: #1122CC;
+	text-decoration: underline;
+}
+cite {
+	color: #A55858;
+	display: inline-block;
+	font-size: 12px;
+    margin-bottom: 2px;
+}
+.imgInfo span {
+	display: inline-block;
+}
+.imgInfo  ul{
+}
+.imgInfo  li{
+	display: inline;
+	margin-right: 20px;
+}
+.imgInfo  li a{
+	color: #888;
+	font-weight: bold;
+}
+/*--- Rate ---*/
+.imgRate {
+	float: left;
+	margin-right: 10px;
+}
+.imgRate a {
+	display: block;
+	background-image:url(images/rateSprite.png);
+	height: 15px;
+	width: 15px;
+	cursor: pointer;
+}
+.imgRate span {
+	display: block;
+	font-size: 15px;
+	width: 15px;
+	text-align: center;
+	font-weight: bold;
+	font-family: verdana;
+	color: #d2d2d2;
+}
+.dislikes {
+	background-position: 0px 0px;
+}
+.dislike{
+	background-position: -15px 0px;
+}
+.like {
+	background-position: -15px -15px;
+}
+.likes {
+	background-position: 0px -15px;
+}
+/*--- mcp ---*/
+#mcp div {
+	float: left;
+}
+#mcp strong {
+	font-weight: bold;
+}
+.mcpName {
+	width: 190px;
+	text-align: center;
+}
+.mcpRank {
+	width: 300px;
+	text-align: center;
+}
+.mcpAction {
+	width: 190px;
+	text-align: center;
+}
+.mcpReport {
+	width: 490px;
+}
+.admin {
+	color: #2ea036;
+}
+.moderator {
+	color: #a02e2e;
+}
+.mcpReport a {
+	display: inline;
+}
+.mcpReport p {
+	padding: 2px 0px;
+}
+/* Search
+--------------------------------------------------------------------------------------- */
+#searchBar {
+	text-align: right;	
+	padding: 10px 15px;
+	float: left;
+	width: 660px;
+}
+#searchBar label{
+	color: #282828;
+	font-weight: bold;
+}
+#searchBar input[type="text"] {
+	width: 400px;
+	border: 1px solid #ddd;
+	height: 20px;
+	padding: 2px 5px;
+}
+#searchBar input[type="submit"]{
+    background: #f3f3f3;
+    border: 1px solid #aaa;
+    cursor: pointer;
+    padding: 3px 6px;
+	font-weight: bold;
+}
+/* Pagination
+--------------------------------------------------------------------------------------- */
+.pagination {
+	text-align: center;	
+	padding: 10px 15px;
+	float: left;
+	width: 660px;
+}
+.pagination a, .pagination span {
+	display: inline-block;
+	font-weight: bold;
+    color: #333;	
+}
+.pagination a:first-child, .pagination span:first-child,.pagination a:last-child, .pagination span:last-child {
+    background: #f3f3f3;
+    border: 1px solid #aaa;
+	border-radius: 5px 5px 5px 5px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+.pagination a:first-child, .pagination span:first-child {
+	float: left;
+}
+.pagination a:last-child, .pagination span:last-child {
+	float: right;
+}
+.pagination span:first-child, .pagination span:last-child {
+	 color: #aaa;
+	 cursor: default;
+}
+/* Recently viewed links
+--------------------------------------------------------------------------------------- */
+#lastVisit li {
+	display: block;
+	padding: 2px 0 2px 15px;
+	font-size: 16px;
+	text-align: left;
+	color: #888;
+}
+#lastVisit li a{
+	font-size: 14px;
+	color: #336699;
+}
+/* LikeBar
+--------------------------------------------------------------------------------------- */
+#text {
+	background: #f6f6f6;
+}
+#text p {
+	padding: 20px;
+	border-radius: 10px;
+	background: #fff;
+	border: 1px solid #ddd;
+}
+#sidebar #likeBar {
+    border: 1px solid #bbb;
+    border-radius: 3px 3px 3px 3px;
+    margin: 5px 0;
+	padding: 0 1px;
+	height: 4px;
+	width: 250px;
+}
+.likeBarLikes {
+    background: #42ae50;
+    border-right: 1px solid #f4f4f4;
+    float: left;
+    height: 4px;
+	margin-left: -1px;
+}
+.likeBarDislikes {
+    background: #da5757;
+    float: right;
+    height: 4px;
+    margin-right: -1px;
+}
+/* Message box
+--------------------------------------------------------------------------------------- */
+#messageBox {
+	margin-top: 20px;
+	color: #191919;
+	padding: 15px 20px;
+	background: #f5f5f5;
+	border: 1px solid #ddd;	
+}
+#messageBox strong{
+	font-size: 20px;
+	display: block;
+	padding-top: 3px;
+}
+#messageBox ul {
+	list-style-type: square;
+	margin-left: 65px;
+}
+#messageBox li {
+	padding: 2px 0px;
+}
+#PageNotFound, #NotAuthorized {
+	background-image:url(images/siren.png);
+	background-repeat: no-repeat;
+	padding-left: 45px;
+	height: 40px;
+}
+#SuccessRequest {
+	background-image:url(images/tick.png);
+	background-repeat: no-repeat;
+	padding-left: 45px;
+	height: 32px;	
+}
+/* Messages
+--------------------------------------------------------------------------------------- */
+.alert {
+	padding: 14px;
+    background: #f2dede;
+    border: 1px solid #eed3d7;
+    color: #b94a48;
+    margin: 20px 0px 0px;
+}
+.success {
+	padding: 14px;
+    background: #e0f2de;
+    border: 1px solid #d6eed3;
+    color: #48b94b;
+    margin: 20px 0px 0px;
+}

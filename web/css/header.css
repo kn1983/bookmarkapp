@@ -1,0 +1,98 @@
+#header {
+
+
+}
+
+/* Header
+--------------------------------------------------------------------------------------- */
+
+/* Header
+--------------------------------------------------------------------------------------- */
+#head {
+    background: #2D2D2D;
+    border-bottom: 1px solid #000;
+    font-size: 24px;
+    height: 29px;
+    opacity: 1;
+    width: 100%;
+    z-index: 990;
+}
+#head a {
+    text-decoration: none;
+}
+/*--- Menu1 ---*/
+#menu1 {
+	height: 29px;
+    padding-left: 10px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	overflow: hidden;	
+}
+#menu1 li {
+    padding: 5px 10px;
+	font-size: 13px;
+	float: left;
+}
+#head a#hw {
+	color: #f6f6f6;
+}
+#menu1 li a {
+    color: #999;
+    text-decoration: none;
+}
+#menu1 li a:hover{
+    color: #f6f6f6;
+}
+/*--- Menu2 ---*/
+#menu2 {
+	height: 29px;
+    background-color: #2D2D2D;
+    padding: 0 10px;
+	position: absolute;
+	right: 0;
+	overflow: hidden;	
+}
+#menu2 li {
+    padding: 5px 10px;
+	color: #999;
+	font-size: 13px;
+	float: left;
+}
+#menu2 li a {
+    color: #f6f6f6;
+    float: none;
+    text-decoration: none;
+	font-weight: bold;
+}
+#head li#account {
+	background-image:url(images/mainSettings.png);
+	padding: 5px 0px;
+	width: 30px;
+	height: 29px;
+	cursor: pointer;
+}
+/*--- Account menu ---*/
+#userBar {
+	color: #fff;
+	font-size: 13px;
+	position: absolute;
+	top: 29px;
+	right: 0;
+	background: #2D2D2D;
+	padding: 0 5px 5px;
+	width: 120px;
+	border-bottom: 1px solid #999;
+	border-left: 1px solid #999;
+	border-radius: 0px 0px 0px 5px;
+}
+#userBar a {
+	color: #fff;
+}
+#userBar li{
+	padding: 5px 10px;
+	line-height: 18px;
+}
+#userBar li:hover {
+	background: #131313;
+}

@@ -1,0 +1,126 @@
+/* Forms
+--------------------------------------------------------------------------------------- */
+.msgForm {
+	background: #fff;
+	float: left;
+	width: 690px;
+	margin-top: 10px;
+}
+.msgForm label {
+	padding-left: 20px;
+	width: 690px;
+	color: #191919;	
+	display: block;
+	padding: 10px 0px;
+	font-size: 18px;
+}
+.msgForm label span{
+	float: right;
+	font-size: 12px;
+	padding-top: 6px;
+	cursor: pointer;
+}
+.msgForm h2 {
+	font-size: 20px;
+	text-align: center;
+	margin: 10px 0px;
+}
+
+.radioBtn {
+	padding: 10px 0px 0px;
+}
+#typeSubmit {
+	padding: 10px 0px;
+	border-bottom: 1px solid #ddd;
+}
+.radioBtn strong{
+	font-weight: normal;
+	margin-right: 20px;
+	padding: 10px 0px;
+	font-size: 18px;
+	color: #191919;
+}
+.radioBtn label{
+	display: inline;
+	width: 100px;
+	font-weight: normal;
+	font-size: 13px;
+	margin-right: 10px;
+}
+
+#tags label {
+	display: inline;
+	width: 100px;
+	font-weight: bold;
+	font-size: 13px;
+	margin: 0px 10px;
+}
+#tags input[type="text"] {
+	width: 180px;
+	display: inline;
+}
+#tags ul {
+	margin-top: 4px;
+}
+#tags li {
+	color: #336699;
+	cursor: pointer;
+	padding: 0px 3px;
+	display: inline;
+}
+#tags span {
+	position: absolute;
+	background: black;
+	color: white;
+	display: none;
+	padding: 5px;
+	margin-top: 25px;
+	opacity: 0.8;
+}
+.msgForm textarea {
+	width: 678px;
+    background: #f6f6f6;
+    border: 1px solid #bbb;
+    color: #7e7e7e;
+    height: 150px;
+	padding: 5px;
+	resize: none;	
+}
+.msgForm input[type="text"], .msgForm input[type="password"], .msgForm input[type="email"] , .msgForm select {
+	width: 678px;
+    background: #f6f6f6;
+    border: 1px solid #bbb;
+    color: #7e7e7e;
+    height: 20px;
+	display: block;
+	padding: 5px;	
+}
+.msgForm select {
+	height: 30px;
+	width: 690px;
+}
+.msgForm option {
+	padding: 2px 5px;
+}
+.msgForm input[type="submit"] {
+	float: right;
+	margin-top: 20px;
+}
+
+/*--- buttons ---*/
+.btnGrey {
+    background: #F3F3F3;
+    border: 1px solid #aaa;
+    cursor: pointer;
+    padding: 8px 18px;	
+	color: #414141;
+	margin: 0 5px;
+}
+.btnBlue {
+    background: #3c6ac6;
+    border: 1px solid #aaa;
+    cursor: pointer;
+    padding: 8px 18px;	
+	color: #fff;
+	margin: 0 5px;	
+}
