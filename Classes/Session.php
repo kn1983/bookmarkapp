@@ -333,7 +333,8 @@ class Session
 		$expires = $this->time + 31536000;		
 		$domain = $this->server_name;
 
-		setcookie($name, $cookie_data, $expires, '', $domain, false, false);		
+		// setcookie($name, $cookie_data, $expires, '', $domain, false, false);
+		setcookie($name, $cookie_data, $expires);		
 	}
 }
 ?>

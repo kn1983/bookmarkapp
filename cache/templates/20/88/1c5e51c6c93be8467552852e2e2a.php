@@ -1,7 +1,7 @@
 <?php
 
-/* page/ucpLogin.html */
-class __TwigTemplate_501e8fcbd1abbb27f1d4d5e9b90b5a5a extends Twig_Template
+/* page/ucpRegister.html */
+class __TwigTemplate_20881c5e51c6c93be8467552852e2e2a extends Twig_Template
 {
     public function __construct(Twig_Environment $env)
     {
@@ -27,7 +27,7 @@ class __TwigTemplate_501e8fcbd1abbb27f1d4d5e9b90b5a5a extends Twig_Template
     // line 4
     public function block_title($context, array $blocks = array())
     {
-        echo "Login";
+        echo "Register";
     }
 
     // line 6
@@ -60,7 +60,7 @@ class __TwigTemplate_501e8fcbd1abbb27f1d4d5e9b90b5a5a extends Twig_Template
 \t\t\t</div>
 \t\t\t<div id=\"actionBar\">
 \t\t\t\t<ul>
-\t\t\t\t\t<li class=\"active\">Login</li>
+\t\t\t\t\t<li class=\"active\">Register</li>
 \t\t\t\t</ul>
 \t\t\t</div>
 \t\t</div>
@@ -97,7 +97,7 @@ class __TwigTemplate_501e8fcbd1abbb27f1d4d5e9b90b5a5a extends Twig_Template
         }
         // line 39
         echo "\t\t\t<div class=\"msgForm\">\t\t
-\t\t\t\t<form method=\"post\" action=\"login\" id=\"login\">
+\t\t\t\t<form method=\"post\" action=\"register\" id=\"register\">
 \t\t\t\t\t<fieldset>\t\t\t\t
 \t\t\t\t\t\t<label for=\"username\">Username: </label>
 \t\t\t\t\t\t<input type=\"text\" name=\"username\" id=\"username\" value=\"";
@@ -106,22 +106,23 @@ class __TwigTemplate_501e8fcbd1abbb27f1d4d5e9b90b5a5a extends Twig_Template
         echo twig_escape_filter($this->env, $this->getAttribute($_data_, "username"), "html", null, true);
         echo "\" />
 
+\t\t\t\t\t\t<label for=\"email\">E-mail address: </label>
+\t\t\t\t\t\t<input type=\"email\" name=\"email\" id=\"email\" value=\"";
+        // line 46
+        if (isset($context["data"])) { $_data_ = $context["data"]; } else { $_data_ = null; }
+        echo twig_escape_filter($this->env, $this->getAttribute($_data_, "email"), "html", null, true);
+        echo "\" />\t
+
 \t\t\t\t\t\t<label for=\"password\">Password: </label>
 \t\t\t\t\t\t<input type=\"password\" id=\"password\" name=\"password\" value=\"";
-        // line 46
+        // line 49
         if (isset($context["data"])) { $_data_ = $context["data"]; } else { $_data_ = null; }
         echo twig_escape_filter($this->env, $this->getAttribute($_data_, "password"), "html", null, true);
         echo "\" />
-\t\t\t\t\t\t
-\t\t\t\t\t\t<div class=\"radioBtn\">
-\t\t\t\t\t\t\t<label for=\"autologin\"><strong>Log me on automatically each visit:</strong> </label>
-\t\t\t\t\t\t\t<input type=\"checkbox\" name=\"autologin\" id=\"autologin\" value=\"1\" />\t\t\t\t\t\t\t
-\t\t\t\t\t\t</div>
 
-\t\t\t\t\t\t<span><a href=\"{U_SEND_PASSWORD}\">I forgot my password</a> | <a href=\"{U_SEND_PASSWORD}\">I forgot my E-mail</a></span>
-\t\t\t\t\t\t<input class=\"btnGrey\" type=\"submit\" name=\"login\" value=\"Login\" />
+\t\t\t\t\t\t<input class=\"btnGrey\" type=\"submit\" name=\"register\" value=\"Register\" />
 \t\t\t\t\t\t";
-        // line 55
+        // line 52
         if (isset($context["form_token"])) { $_form_token_ = $context["form_token"]; } else { $_form_token_ = null; }
         echo $_form_token_;
         echo "
@@ -136,7 +137,7 @@ class __TwigTemplate_501e8fcbd1abbb27f1d4d5e9b90b5a5a extends Twig_Template
 
     public function getTemplateName()
     {
-        return "page/ucpLogin.html";
+        return "page/ucpRegister.html";
     }
 
     public function isTraitable()

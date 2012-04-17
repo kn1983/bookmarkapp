@@ -28,8 +28,8 @@ $db->sql_connect(Config::dbHost, Config::dbUser, Config::dbPw, Config::dbName, C
 $session->sessionBegin();
 unset($session->data['password']);
 
-var_dump($session->data);
-var_dump($_COOKIE);
+// var_dump($session->data);
+// var_dump($_COOKIE);
 
 // Make an array of all global variables
 $data = array(
