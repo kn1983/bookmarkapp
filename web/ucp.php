@@ -158,6 +158,11 @@ function checkLogin($data)
 
 	$passwordHash = new Classes\Security\PasswordHash();
 
+	$message = array(
+		'login' 	=> false,
+		'message'	=> ''
+		);
+
 /*	if (!Forms::checkFormKey('ucp_login'))
 	{
 		echo json_encode('An error occurred while making the request. Reload the page and try again');
@@ -165,8 +170,10 @@ function checkLogin($data)
 	else
 	{	*/		
 		if (!$data['username'] || !$data['password']) {
+			
+			$message['message'] = 'You need to enter a username and a password';
 
-			echo json_encode('You need to enter a username and a password');
+			echo json_encode($message);
 		}
 
 		$username_clean = strtolower($data['username']);
@@ -194,16 +201,22 @@ function checkLogin($data)
 				// Creates the session that actually logs in the user
 				$session->sessionCreate($row['id'], $data['autologin']);
 				/*header('Location: index');*/
-				echo json_encode('login success');
+
+				$message['login'] = true;
+				echo json_encode($message);
 			} 
 			else 
 			{
-				echo json_encode('You have entered a wrong username or password');
+				$message['message'] = 'You have entered a wrong username or password';
+
+				echo json_encode($message);				
 			}
 		}
 		else
 		{
-			echo json_encode('You have entered a wrong username or password');			
+			$message['message'] = 'You have entered a wrong username or password';
+
+			echo json_encode($message);						
 		}
 /*	}*/
 }
