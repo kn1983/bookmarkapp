@@ -76,6 +76,34 @@ class Db
 	}
 
 	/**
+	* Connect to server
+	* @access public
+	*/
+	public function sql_connect()
+	{
+		$this->db_connect_id = mysql_connect(Config::dbHost, Config::dbUser, Config::dbPw);
+
+		if ($this->db_connect_id)
+		{
+			if (mysql_select_db(Config::dbName, $this->db_connect_id))
+			{
+
+				mysql_query("SET NAMES 'utf8'", $this->db_connect_id);
+
+				$modes = array('STRICT_ALL_TABLES','STRICT_TRANS_TABLES' );
+
+				$mode = implode(',', $modes);
+
+				mysql_query("SET SESSION sql_mode='{$mode}'", $this->db_connect_id);
+
+				return $this->db_connect_id;
+			}
+		}
+
+		return $this->sql_error('');
+	}
+
+	/**
 	* return on error or display error message
 	*/
 	public function sql_return_on_error($fail = false)
@@ -693,67 +721,6 @@ class Db
 		}
 
 		return $this->sql_error_returned;
-	}
-
-	/**
-	* Connect to server
-	* @access public
-	*/
-	public function sql_connect($sqlserver, $sqluser, $sqlpassword, $database, $port = false)
-	{
-		$this->user = $sqluser;
-		$this->server = $sqlserver . (($port) ? ':' . $port : '');
-		$this->dbname = $database;
-
-		$this->sql_layer = 'mysql4';
-
-		$this->db_connect_id = @mysql_connect($this->server, $this->user, $sqlpassword);
-
-		if ($this->db_connect_id && $this->dbname != '')
-		{
-			if (@mysql_select_db($this->dbname, $this->db_connect_id))
-			{
-				// Determine what version we are using and if it natively supports UNICODE
-				if (version_compare($this->sql_server_info(true), '4.1.0', '>='))
-				{
-					@mysql_query("SET NAMES 'utf8'", $this->db_connect_id);
-
-					// enforce strict mode on databases that support it
-					if (version_compare($this->sql_server_info(true), '5.0.2', '>='))
-					{
-						$result = @mysql_query('SELECT @@session.sql_mode AS sql_mode', $this->db_connect_id);
-						$row = @mysql_fetch_assoc($result);
-						@mysql_free_result($result);
-						$modes = array_map('trim', explode(',', $row['sql_mode']));
-
-						// TRADITIONAL includes STRICT_ALL_TABLES and STRICT_TRANS_TABLES
-						if (!in_array('TRADITIONAL', $modes))
-						{
-							if (!in_array('STRICT_ALL_TABLES', $modes))
-							{
-								$modes[] = 'STRICT_ALL_TABLES';
-							}
-
-							if (!in_array('STRICT_TRANS_TABLES', $modes))
-							{
-								$modes[] = 'STRICT_TRANS_TABLES';
-							}
-						}
-
-						$mode = implode(',', $modes);
-						@mysql_query("SET SESSION sql_mode='{$mode}'", $this->db_connect_id);
-					}
-				}
-				else if (version_compare($this->sql_server_info(true), '4.0.0', '<'))
-				{
-					$this->sql_layer = 'mysql';
-				}
-
-				return $this->db_connect_id;
-			}
-		}
-
-		return $this->sql_error('');
 	}
 
 	/**

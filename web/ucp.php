@@ -44,14 +44,14 @@ switch ($mode)
 			$error[] = checkRegistration($data);
 		}
 
-		$template = $twig->loadTemplate('page/ucpRegister.html');
+/*		$template = $twig->loadTemplate('page/ucpRegister.html');
 
 		// Render the template
 		echo $template->render(array(
 			'data'				=> $data,
 			'error'				=> $error,
 			'form_token'		=> $form_token,
-		));
+		));*/
 
 	break;
 
@@ -104,12 +104,12 @@ function checkRegistration($data)
 
 	$passwordHash = new Classes\Security\PasswordHash();	
 
-	if (!Forms::checkFormKey('ucp_register'))
+/*	if (!Forms::checkFormKey('ucp_register'))
 	{
-		return 'An error occurred while making the request. Reload the page and try again';
+		echo json_encode('An error occurred while making the request. Reload the page and try again');
 	}
 	else
-	{ 
+	{ */
 		$error = FormValidation::validateData($data, array(
 			'password'		=> array(
 				array('string', 'password', 5, 60),
@@ -140,13 +140,13 @@ function checkRegistration($data)
 			// Log in the user and redirect to the startpage or maybe change to user page or something later?
 			$user_id = mysql_insert_id();
 			$session->sessionCreate($user_id);
-			header('Location: index');
+			echo json_encode('registration success');
 		}
 		else
 		{
-			return $error;
+			echo json_encode($error);
 		}		
-	}	
+/*	}*/	
 }
 
 /**
@@ -165,6 +165,7 @@ function checkLogin($data)
 	else
 	{	*/		
 		if (!$data['username'] || !$data['password']) {
+
 			echo json_encode('You need to enter a username and a password');
 		}
 

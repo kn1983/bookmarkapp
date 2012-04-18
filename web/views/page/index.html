@@ -9,48 +9,50 @@
 {% endblock %}
 
 {% block content %}
-<div id="topMain">
-	<div class="wrapper">
-		<div id="topPrimary">
-			<div id="breadcrumbs">
-				<a href="{{ global.U_HOME }}" title="Back to startpage">Home</a>
+<noscript>
+	<div id="topMain">
+		<div class="wrapper">
+			<div id="topPrimary">
+				<div id="breadcrumbs">
+					<a href="{{ global.U_HOME }}" title="Back to startpage">Home</a>
+				</div>
+				<div id="headline">
+					<h1>In the spotlight</h1>
+				</div>
+				<div id="actionBar">
+					<ul>
+						<li class="active">In the spotlight</li>
+						<li><a href="{{ a_newly_added }}">Newly added</a></li>
+						<li><a href="{{ a_following }}">Following</a></li>
+						<li><a href="{{ a_bookmarked }}">Bookmarked</a></li>
+					</ul>
+				</div>
 			</div>
-			<div id="headline">
-				<h1>In the spotlight</h1>
-			</div>
-			<div id="actionBar">
-				<ul>
-					<li class="active">In the spotlight</li>
-					<li><a href="{{ a_newly_added }}">Newly added</a></li>
-					<li><a href="{{ a_following }}">Following</a></li>
-					<li><a href="{{ a_bookmarked }}">Bookmarked</a></li>
+		</div>
+	</div>
+	<div id="bottomMain">
+		<div class="wrapper">
+			<div id="primary">
+				<ul class="row">
+					
 				</ul>
+				<div class="pagination">{{ prev_page|raw }}<span id="pageNr" class="{{ page_nr|raw }}">Page {{ page_nr|raw }}</span>{{ next_page|raw }}</div>
+			</div>
+			<div id="sidebar">
+
+				{% if base.user_logged_in %}
+				<h3>Create your own community</h3>
+				<p>
+					Start own communities for your interests and let other people submit content to it.		
+					<a id="btnCreateAlbum" href="{{ a_create_forum }}">Create your community now.</a>
+				</p>	
+				{% endif %}
+
+				<h3>Recently viewed links</h3>
+				<ul id="lastVisit">				
+				</ul>			
 			</div>
 		</div>
 	</div>
-</div>
-<div id="bottomMain">
-	<div class="wrapper">
-		<div id="primary">
-			<ul class="row">
-				
-			</ul>
-			<div class="pagination">{{ prev_page|raw }}<span id="pageNr" class="{{ page_nr|raw }}">Page {{ page_nr|raw }}</span>{{ next_page|raw }}</div>
-		</div>
-		<div id="sidebar">
-
-			{% if base.user_logged_in %}
-			<h3>Create your own community</h3>
-			<p>
-				Start own communities for your interests and let other people submit content to it.		
-				<a id="btnCreateAlbum" href="{{ a_create_forum }}">Create your community now.</a>
-			</p>	
-			{% endif %}
-
-			<h3>Recently viewed links</h3>
-			<ul id="lastVisit">				
-			</ul>			
-		</div>
-	</div>
-</div>
+</noscript>
 {% endblock %}
