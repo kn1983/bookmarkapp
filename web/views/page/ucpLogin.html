@@ -9,54 +9,5 @@
 {% endblock %}
 
 {% block content %}
-<div id="topMain">
-	<div class="wrapper">
-		<div id="topPrimary">
-			<div id="breadcrumbs">
-				<a href="{{ global.U_HOME }}" title="Back to startpage">Home</a>
-			</div>
-			<div id="headline">
-				<h1>In the spotlight</h1>
-			</div>
-			<div id="actionBar">
-				<ul>
-					<li class="active">Login</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
-<div id="bottomMain">
-	<div class="wrapper">
-		<div id="primary">
-			{% if error %}
-				<div class="alert">
-					{% for message in error %}
-						<p>{{ message }}</p>
-					{% endfor %}
-				</div>
-			{% endif %}
-			<div class="msgForm">		
-				<form method="post" action="login" id="login">
-					<fieldset>				
-						<label for="username">Username: </label>
-						<input type="text" name="username" id="username" value="{{ data.username }}" />
 
-						<label for="password">Password: </label>
-						<input type="password" id="password" name="password" value="{{ data.password }}" />
-						
-						<div class="radioBtn">
-							<label for="autologin"><strong>Log me on automatically each visit:</strong> </label>
-							<input type="checkbox" name="autologin" id="autologin" value="1" />							
-						</div>
-
-						<span><a href="{U_SEND_PASSWORD}">I forgot my password</a> | <a href="{U_SEND_PASSWORD}">I forgot my E-mail</a></span>
-						<input class="btnGrey" type="submit" name="login" value="Login" />
-						{{ form_token|raw }}
-					</fieldset>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
 {% endblock %}

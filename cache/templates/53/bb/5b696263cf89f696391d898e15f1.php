@@ -11,7 +11,9 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
             'title' => array($this, 'block_title'),
             'head' => array($this, 'block_head'),
             'header' => array($this, 'block_header'),
+            'sidebarFirst' => array($this, 'block_sidebarFirst'),
             'content' => array($this, 'block_content'),
+            'sidebarSecond' => array($this, 'block_sidebarSecond'),
             'footer' => array($this, 'block_footer'),
             'scripts' => array($this, 'block_scripts'),
         );
@@ -26,33 +28,48 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
         ";
         // line 4
         $this->displayBlock('head', $context, $blocks);
-        // line 12
+        // line 10
         echo "    </head>
     <body>
 
         ";
-        // line 15
+        // line 13
         $this->displayBlock('header', $context, $blocks);
-        // line 40
-        echo "        
+        // line 21
+        echo " 
 
+        <div id=\"sidebarFirst\">
+            ";
+        // line 24
+        $this->displayBlock('sidebarFirst', $context, $blocks);
+        // line 27
+        echo "        </div>
 
-    \t";
-        // line 43
+        <div id=\"content\">
+        \t";
+        // line 30
         $this->displayBlock('content', $context, $blocks);
-        // line 45
-        echo "
+        // line 33
+        echo "        </div>
+
+        <div id=\"sidebarSecond\">
+            ";
+        // line 36
+        $this->displayBlock('sidebarSecond', $context, $blocks);
+        // line 39
+        echo "        </div>
 
         <div id=\"footer\">
             ";
-        // line 48
+        // line 42
         $this->displayBlock('footer', $context, $blocks);
-        // line 51
+        // line 45
         echo "        </div>
+
         ";
-        // line 52
+        // line 47
         $this->displayBlock('scripts', $context, $blocks);
-        // line 53
+        // line 72
         echo "        
     </body>
 </html>";
@@ -73,80 +90,92 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
             <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/base.css\" />
             <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/header.css\" />
             <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/forms.css\" />
-            <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js\"></script>
-            <script type=\"text/javascript\" src=\"web/js/base.js\"></script>
         ";
     }
 
-    // line 15
+    // line 13
     public function block_header($context, array $blocks = array())
     {
-        // line 16
-        echo "        <div id=\"head\">
-            <ul id=\"menu1\">
-                <li><a id=\"hw\" href=\"\">Projekt 3</a></li>             
-            </ul>
-            <ul id=\"menu2\">
-                ";
-        // line 21
-        if (isset($context["global"])) { $_global_ = $context["global"]; } else { $_global_ = null; }
-        if ($this->getAttribute($_global_, "userLoggedIn")) {
-            // line 22
-            echo "                <li><a href=\"#\">";
-            if (isset($context["global"])) { $_global_ = $context["global"]; } else { $_global_ = null; }
-            echo twig_escape_filter($this->env, $this->getAttribute($_global_, "username"), "html", null, true);
-            echo "</a></li>
-                <li id=\"account\"></li>
-                ";
-        } else {
-            // line 24
-            echo "              
-                <li><a href=\"register\">Register</a></li>
-                <li><a href=\"login\">Login</a></li>
-                ";
-        }
-        // line 28
-        echo "            </ul>
+        // line 14
+        echo "        <div id=\"header\">
             ";
-        // line 29
+        // line 15
         if (isset($context["global"])) { $_global_ = $context["global"]; } else { $_global_ = null; }
         if ($this->getAttribute($_global_, "userLoggedIn")) {
-            // line 30
-            echo "            <div id=\"userBar\">
-                <ul>
-                    <li><a href=\"#\">0 new pms</a></li>
-                    <li><a href=\"#\">Account settings</a></li>
-                    <li><a href=\"#\">User settings</a></li>
-                    <li><a href=\"logout\">Logout</a></li>   
-                </ul>       
-            </div>
-             ";
+            // line 16
+            echo "                Logged in
+            ";
+        } else {
+            // line 18
+            echo "                Not logged in
+            ";
         }
-        // line 39
+        // line 20
         echo "        </div>
         ";
     }
 
-    // line 43
-    public function block_content($context, array $blocks = array())
+    // line 24
+    public function block_sidebarFirst($context, array $blocks = array())
     {
-        // line 44
-        echo "        ";
-    }
-
-    // line 48
-    public function block_footer($context, array $blocks = array())
-    {
-        // line 49
-        echo "               
+        // line 25
+        echo "                Sidebar first
             ";
     }
 
-    // line 52
+    // line 30
+    public function block_content($context, array $blocks = array())
+    {
+        // line 31
+        echo "                Content
+            ";
+    }
+
+    // line 36
+    public function block_sidebarSecond($context, array $blocks = array())
+    {
+        // line 37
+        echo "                Sidebar second
+            ";
+    }
+
+    // line 42
+    public function block_footer($context, array $blocks = array())
+    {
+        // line 43
+        echo "               footer
+            ";
+    }
+
+    // line 47
     public function block_scripts($context, array $blocks = array())
     {
-        // line 53
-        echo "        ";
+        // line 48
+        echo "            <script type=\"text/template\" id=\"login-form-tpl\">   
+                <form method=\"post\" action=\"login\" id=\"login\">
+                    <fieldset>              
+                        <label for=\"username\">Username: </label>
+                        <input type=\"text\" name=\"username\" id=\"username\" />
+
+                        <label for=\"password\">Password: </label>
+                        <input type=\"password\" id=\"password\" name=\"password\" />
+                        
+                        <div class=\"radioBtn\">
+                            <label for=\"autologin\"><strong>Log me on automatically each visit:</strong> </label>
+                            <input type=\"checkbox\" name=\"autologin\" id=\"autologin\" value=\"1\" />                         
+                        </div>
+
+                        <span><a href=\"#\">I forgot my password</a> | <a href=\"#\">I forgot my E-mail</a></span>
+                        <input type=\"hidden\" name=\"login\" value=\"1\" />
+                        <input class=\"btnGrey loginBtn\" type=\"submit\" value=\"Login\" />
+                    </fieldset>
+                </form>
+            </script>        
+            <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js\"></script>
+            <script type=\"text/javascript\" src=\"web/js/libs/underscore-min.js\"></script>
+            <script type=\"text/javascript\" src=\"web/js/libs/backbone-min.js\"></script>
+            <script type=\"text/javascript\" src=\"web/js/main.js\"></script>        
+        ";
     }
 
     public function getTemplateName()

@@ -26,15 +26,15 @@ window.LoginFormView = Backbone.View.extend({
 
 var AppRouter = Backbone.Router.extend({
 	routes: {
-		"": "header"
+		"": "content"
 	},
 	initialize: function(){
-		$("#header").html(new LoginFormView().render().el);
+		$("#content").html(new LoginFormView().render().el);
 		// $.getJSON(url, function(data){
 
 		// });
 	},
-	header: function(){
+	content: function(){
 		console.debug("test");
 		// $("#header").html(new LoginFormView.render().el);
 	}

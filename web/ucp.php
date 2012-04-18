@@ -73,13 +73,13 @@ switch ($mode)
 			$error[] = checkLogin($data);
 		}
 
-		$template = $twig->loadTemplate('page/ucpLogin.html');
+/*		$template = $twig->loadTemplate('page/ucpLogin.html');
 
 		echo $template->render(array(
 			'data'				=> $data,
 			'error'				=> $error,
 			'form_token'		=> $form_token,			
-		));
+		));*/
 
 	break;
 
@@ -158,14 +158,14 @@ function checkLogin($data)
 
 	$passwordHash = new Classes\Security\PasswordHash();
 
-	if (!Forms::checkFormKey('ucp_login'))
+/*	if (!Forms::checkFormKey('ucp_login'))
 	{
-		return 'An error occurred while making the request. Reload the page and try again';
+		echo json_encode('An error occurred while making the request. Reload the page and try again');
 	}
 	else
-	{			
+	{	*/		
 		if (!$data['username'] || !$data['password']) {
-			return 'You need to enter a username and a password';
+			echo json_encode('You need to enter a username and a password');
 		}
 
 		$username_clean = strtolower($data['username']);
@@ -192,17 +192,18 @@ function checkLogin($data)
 
 				// Creates the session that actually logs in the user
 				$session->sessionCreate($row['id'], $data['autologin']);
-				header('Location: index');
+				/*header('Location: index');*/
+				echo json_encode('login success');
 			} 
 			else 
 			{
-				return 'You have entered a wrong username or password';
+				echo json_encode('You have entered a wrong username or password');
 			}
 		}
 		else
 		{
-			return 'You have entered a wrong username or password';			
+			echo json_encode('You have entered a wrong username or password');			
 		}
-	}
+/*	}*/
 }
 ?>

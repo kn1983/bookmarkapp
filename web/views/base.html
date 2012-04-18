@@ -6,50 +6,69 @@
             <link type="text/css" rel="stylesheet" href="web/css/base.css" />
             <link type="text/css" rel="stylesheet" href="web/css/header.css" />
             <link type="text/css" rel="stylesheet" href="web/css/forms.css" />
-            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-            <script type="text/javascript" src="web/js/base.js"></script>
         {% endblock %}
     </head>
     <body>
 
         {% block header %}
-        <div id="head">
-            <ul id="menu1">
-                <li><a id="hw" href="">Projekt 3</a></li>             
-            </ul>
-            <ul id="menu2">
-                {% if global.userLoggedIn %}
-                <li><a href="#">{{ global.username }}</a></li>
-                <li id="account"></li>
-                {% else %}              
-                <li><a href="register">Register</a></li>
-                <li><a href="login">Login</a></li>
-                {% endif %}
-            </ul>
+        <div id="header">
             {% if global.userLoggedIn %}
-            <div id="userBar">
-                <ul>
-                    <li><a href="#">0 new pms</a></li>
-                    <li><a href="#">Account settings</a></li>
-                    <li><a href="#">User settings</a></li>
-                    <li><a href="logout">Logout</a></li>   
-                </ul>       
-            </div>
-             {% endif %}
+                Logged in
+            {% else %}
+                Not logged in
+            {% endif %}
         </div>
-        {% endblock %}        
+        {% endblock %} 
 
+        <div id="sidebarFirst">
+            {% block sidebarFirst %}
+                Sidebar first
+            {% endblock %}
+        </div>
 
-    	{% block content %}
-        {% endblock %}
+        <div id="content">
+        	{% block content %}
+                Content
+            {% endblock %}
+        </div>
 
+        <div id="sidebarSecond">
+            {% block sidebarSecond %}
+                Sidebar second
+            {% endblock %}
+        </div>
 
         <div id="footer">
             {% block footer %}
-               
+               footer
             {% endblock %}
         </div>
+
         {% block scripts %}
+            <script type="text/template" id="login-form-tpl">   
+                <form method="post" action="login" id="login">
+                    <fieldset>              
+                        <label for="username">Username: </label>
+                        <input type="text" name="username" id="username" />
+
+                        <label for="password">Password: </label>
+                        <input type="password" id="password" name="password" />
+                        
+                        <div class="radioBtn">
+                            <label for="autologin"><strong>Log me on automatically each visit:</strong> </label>
+                            <input type="checkbox" name="autologin" id="autologin" value="1" />                         
+                        </div>
+
+                        <span><a href="#">I forgot my password</a> | <a href="#">I forgot my E-mail</a></span>
+                        <input type="hidden" name="login" value="1" />
+                        <input class="btnGrey loginBtn" type="submit" value="Login" />
+                    </fieldset>
+                </form>
+            </script>        
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+            <script type="text/javascript" src="web/js/libs/underscore-min.js"></script>
+            <script type="text/javascript" src="web/js/libs/backbone-min.js"></script>
+            <script type="text/javascript" src="web/js/main.js"></script>        
         {% endblock %}        
     </body>
 </html>
