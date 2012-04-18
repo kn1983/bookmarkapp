@@ -8,12 +8,13 @@
             <link type="text/css" rel="stylesheet" href="web/css/forms.css" />
         {% endblock %}
     </head>
-    <body>
+    <body id="body">
 
         {% block header %}
         <div id="header">
             {% if global.userLoggedIn %}
                 Logged in
+                <a href="logout">Logout</a>
             {% else %}
                 Not logged in
             {% endif %}
