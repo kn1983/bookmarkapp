@@ -4,6 +4,8 @@
 	RewriteRule ^$ web/index.php?index
 	RewriteRule ^index$ web/index.php?index
 
+	RewriteRule ^userinfo$ web/userinfo.php
+
 	RewriteRule ^([a-z0-9_-]+)$ web/ucp.php?mode=$1
 
 	RewriteRule ^forum/([0-9]+)$ web/app.php?forum=$1

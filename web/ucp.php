@@ -172,7 +172,6 @@ function checkLogin($data)
 		if (!$data['username'] || !$data['password']) {
 			
 			$message['message'] = 'You need to enter a username and a password';
-
 			echo json_encode($message);
 		}
 
@@ -208,14 +207,12 @@ function checkLogin($data)
 			else 
 			{
 				$message['message'] = 'You have entered a wrong username or password';
-
 				echo json_encode($message);				
 			}
 		}
 		else
 		{
 			$message['message'] = 'You have entered a wrong username or password';
-
 			echo json_encode($message);						
 		}
 /*	}*/
