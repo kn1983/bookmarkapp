@@ -5,7 +5,6 @@ use Classes\Config;
 define('_DIR_', '../');
 
 // Include some common classes
-require _DIR_ . 'vendors/Twig/Autoloader.php';
 require _DIR_ . 'Classes/Db.php';
 require _DIR_ . 'Classes/Request.php';
 require _DIR_ . 'Classes/Session.php';

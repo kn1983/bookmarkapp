@@ -10,7 +10,7 @@ class Config
 	const dbPort = '';
 	const dbName = 'page';
 	const dbUser = 'root';
-	const dbPw 	 = 'root';
+	const dbPw 	 = '';
 
 	// Some cookie setup
 	const cookie_name = 'page_kl7dk';
