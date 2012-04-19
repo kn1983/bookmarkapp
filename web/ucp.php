@@ -179,7 +179,7 @@ function checkLogin($data)
 			$sql = "SELECT id, username, password, email, type
 					FROM users
 					WHERE username_clean = '{$username_clean}'
-					AND type IN (" . Config::userNew . ", " . Config::userNormal . ", " . Config::userAdmin . ")";
+					AND type IN (" . Config::USER_NEW . ", " . Config::USER_NORMAL . ", " . Config::USER_ADMIN . ")";
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 

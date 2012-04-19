@@ -6,33 +6,29 @@ class Config
 {
 
 	// Database settings
-	const dbHost = 'localhost';
-	const dbPort = '';
-	const dbName = 'page';
-	const dbUser = 'root';
-	const dbPw 	 = '';
+	const DB_HOST = 'localhost';
+	const DB_PORT = '';
+	const DB_NAME = 'page';
+	const DB_USER = 'root';
+	const DB_PW   = '';
 
 	// Some cookie setup
-	const cookie_name = 'page_kl7dk';
-	const cookie_domain = 'localhost';
-	const cookie_path = '/';
-	const cookie_secure = 0;
-	const sessionLength = 3600;
-
-	// CAPTCHA settings
-	const captchaPrivateKey = '6LebFM8SAAAAAGGRx_b9v4aBCRryd-H_4tjQuxSn';
-	const captchaPublicKey = '6LebFM8SAAAAAMu6fTaMEJOkZbtW42Za75jjmhbG';
+	const COOKIE_NAME    = 'page_kl7dk';
+	const COOKIE_DOMAIN  = 'localhost';
+	const COOKIE_PATH    = '/';
+	const COOKIE_SECURE  = 0;
+	const SESSION_LENGTH = 3600;
 
 	// User groups
-	const userAdmin = 1;
-	const userNew = 2;
-	const userNormal = 3;
-	const userGuest = 4;
+	const USER_ADMIN  = 1;
+	const USER_NEW 	  = 2;
+	const USER_NORMAL = 3;
+	const USER_GUEST  = 4;
 
 	// User is a guest
-	const guestId = 1;
+	const GUEST_ID = 1;
 
 	// Some times
-	const oneHour = 3600;
+	const ONE_HOUR = 3600;
 }
 ?>
