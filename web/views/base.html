@@ -3,7 +3,7 @@
     <head>       
         {% block head %}
             <title>{% block title %}{% endblock %} - My Webpage</title>
-            <link type="text/css" rel="stylesheet" href="web/css/base.css" />
+            <link type="<textarea></textarea>xt/css" rel="stylesheet" href="web/css/base.css" />
             <link type="text/css" rel="stylesheet" href="web/css/header.css" />
             <link type="text/css" rel="stylesheet" href="web/css/forms.css" />
         {% endblock %}
@@ -12,12 +12,7 @@
 
         {% block header %}
         <div id="header">
-            {% if global.userLoggedIn %}
-                Logged in
-                <a href="logout">Logout</a>
-            {% else %}
-                Not logged in
-            {% endif %}
+
         </div>
         {% endblock %} 
 
@@ -46,6 +41,9 @@
         </div>
 
         {% block scripts %}
+            <script type="text/template" id="header-tpl">
+                <h1>Bookmarks</h1>
+            </script>
             <script type="text/template" id="login-form-tpl">   
                 <form method="post" action="login" id="login">
                     <fieldset>              
@@ -65,10 +63,18 @@
                         <input class="btnGrey loginBtn" type="submit" value="Login" />
                     </fieldset>
                 </form>
-            </script>        
+            </script>
+            <script type="text/template" id="main-menu-item">
+                <a href="<%= url %>"><%= name %></a>
+            </script>       
             <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
             <script type="text/javascript" src="web/js/libs/underscore-min.js"></script>
             <script type="text/javascript" src="web/js/libs/backbone-min.js"></script>
+            <script type="text/javascript" src="web/js/models/userinfo.js"></script>
+            <script type="text/javascript" src="web/js/models/mainmenu.js"></script>  
+            <script type="text/javascript" src="web/js/views/loginform.js"></script> 
+            <script type="text/javascript" src="web/js/views/header.js"></script> 
+            <script type="text/javascript" src="web/js/views/mainmenu.js"></script> 
             <script type="text/javascript" src="web/js/main.js"></script>        
         {% endblock %}        
     </body>
