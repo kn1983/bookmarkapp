@@ -9,16 +9,8 @@ require _DIR_ . 'Classes/Security/FormValidation.php';
 require _DIR_ . 'Classes/Security/PasswordHash.php';
 require _DIR_ . 'Classes/Forms.php';
 
-// Default values for the message send back to client
-$message = array(
-	'registration' 	=> false,
-	'error'			=> false,
-);
-
 // Get requested page
 $mode = $request->requestVar('mode','');
-
-$passwordHash = new Classes\Security\PasswordHash();
 
 // Just do a redirect if the user tries to access these pages while logged in
 if ($mode == 'register' || $mode == 'login')
@@ -35,7 +27,7 @@ switch ($mode)
 	// User is registering
 	case 'register':
 
-		$submit	= (isset($_POST['register'])) ? true : false;
+		$submitReg	= (isset($_POST['register'])) ? true : false;
 
 		/*$form_token = Forms::addFormKey('ucp_register');*/
 
@@ -45,7 +37,8 @@ switch ($mode)
 			'email'		=> $request->requestVar('email', ''),
 		);
 
-		if ($submit)
+
+		if ($submitReg)
 		{
 			checkRegistration($data);
 		}
@@ -198,7 +191,6 @@ function checkLogin($data)
 
 					// Creates the session that actually logs in the user
 					$session->sessionCreate($row['id'], $data['autologin']);
-					/*header('Location: index');*/
 
 					$message['login'] = true;
 					echo json_encode($message);

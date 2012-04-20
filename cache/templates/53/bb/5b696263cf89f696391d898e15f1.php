@@ -69,7 +69,7 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
         ";
         // line 43
         $this->displayBlock('scripts', $context, $blocks);
-        // line 101
+        // line 105
         echo "        
     </body>
 </html>";
@@ -177,12 +177,16 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
                         <label for=\"email\">E-mail address: </label>
                         <input type=\"email\" name=\"email\" id=\"email\" value=\"\" /> 
 
-                        <label for=\"password\">Password: </label>
+                        <label for=\"password\">Passsword: </label>
                         <input type=\"password\" id=\"password\" name=\"password\" value=\"\" />
 
-                        <input class=\"btnGrey submitUser\" type=\"submit\" name=\"register\" value=\"Register\" />
+                        <input type=\"hidden\" name=\"register\" value=\"1\" />
+                        <input class=\"btnGrey submitUser\" type=\"submit\" value=\"Register\" />
                     </fieldset>
                 </form>
+                 <div class=\"error\">
+                    <%= errorMessage %>
+                </div>                
             </script>       
             <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js\"></script>
             <script type=\"text/javascript\" src=\"web/js/libs/underscore-min.js\"></script>

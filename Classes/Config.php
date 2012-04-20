@@ -10,7 +10,7 @@ class Config
 	const DB_PORT = '';
 	const DB_NAME = 'page';
 	const DB_USER = 'root';
-	const DB_PW   = 'root';
+	const DB_PW   = '';
 
 	// Some cookie setup
 	const COOKIE_NAME    = 'page_kl7dk';
