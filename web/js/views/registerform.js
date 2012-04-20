@@ -10,7 +10,7 @@ window.RegisterFormView = Backbone.View.extend({
 	},
 	render: function(){
 		// this.model;
-		this.$el.html(this.template());
+		this.$el.html(this.template(this.model.toJSON()));
 		return this;
 	},
 	events: {
