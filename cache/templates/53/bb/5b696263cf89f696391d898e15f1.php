@@ -69,7 +69,7 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
         ";
         // line 43
         $this->displayBlock('scripts', $context, $blocks);
-        // line 79
+        // line 101
         echo "        
     </body>
 </html>";
@@ -87,9 +87,9 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
         echo "            <title>";
         $this->displayBlock('title', $context, $blocks);
         echo " - My Webpage</title>
-            <link type=\"<textarea></textarea>xt/css\" rel=\"stylesheet\" href=\"web/css/base.css\" />
-            <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/header.css\" />
-            <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/forms.css\" />
+            <!-- <link type=\"<textarea></textarea>xt/css\" rel=\"stylesheet\" href=\"web/css/base.css\" /> -->
+            <!-- <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/header.css\" /> -->
+            <!-- <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/forms.css\" /> -->
         ";
     }
 
@@ -161,18 +161,40 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
                         <input class=\"btnGrey loginBtn\" type=\"submit\" value=\"Login\" />
                     </fieldset>
                 </form>
+                 <div class=\"error\">
+                    <%= errorMessage %>
+                </div>
             </script>
             <script type=\"text/template\" id=\"main-menu-item\">
                 <a href=\"<%= url %>\"><%= name %></a>
+            </script>
+            <script type=\"text/template\" id=\"register-form-tpl\">
+                <form method=\"post\" action=\"register\" id=\"register\">
+                    <fieldset>              
+                        <label for=\"username\">Username: </label>
+                        <input type=\"text\" name=\"username\" id=\"username\" value=\"\" />
+
+                        <label for=\"email\">E-mail address: </label>
+                        <input type=\"email\" name=\"email\" id=\"email\" value=\"\" /> 
+
+                        <label for=\"password\">Password: </label>
+                        <input type=\"password\" id=\"password\" name=\"password\" value=\"\" />
+
+                        <input class=\"btnGrey submitUser\" type=\"submit\" name=\"register\" value=\"Register\" />
+                    </fieldset>
+                </form>
             </script>       
             <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js\"></script>
             <script type=\"text/javascript\" src=\"web/js/libs/underscore-min.js\"></script>
             <script type=\"text/javascript\" src=\"web/js/libs/backbone-min.js\"></script>
             <script type=\"text/javascript\" src=\"web/js/models/userinfo.js\"></script>
-            <script type=\"text/javascript\" src=\"web/js/models/mainmenu.js\"></script>  
+            <script type=\"text/javascript\" src=\"web/js/models/mainmenu.js\"></script>
+            <script type=\"text/javascript\" src=\"web/js/models/register.js\"></script> 
+            <script type=\"text/javascript\" src=\"web/js/models/login.js\"></script>  
             <script type=\"text/javascript\" src=\"web/js/views/loginform.js\"></script> 
             <script type=\"text/javascript\" src=\"web/js/views/header.js\"></script> 
             <script type=\"text/javascript\" src=\"web/js/views/mainmenu.js\"></script> 
+            <script type=\"text/javascript\" src=\"web/js/views/registerform.js\"></script> 
             <script type=\"text/javascript\" src=\"web/js/main.js\"></script>        
         ";
     }

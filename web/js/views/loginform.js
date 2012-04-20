@@ -1,24 +1,30 @@
 window.LoginFormView = Backbone.View.extend({
 	tagName: "div",
 	className: "msgForm",
-	template:_.template($("#login-form-tpl").html()), 
+	template:_.template($("#login-form-tpl").html()),
+
 	initialize: function(){
+		_.bindAll(this, "render");
+		this.model.on('change', this.render);
 		this.render();
 	},
 	render: function(eventName){
-		this.$el.html(this.template());
+		this.$el.html(this.template(this.model.toJSON()));
 		return this;
 	},
 	events: {
 		"click .loginBtn": "login"
 	},
 	login: function(event){
-		var url = "login";
 		var loginFormData = $("#login").serialize();
-		$.post(url, loginFormData, function(data){
-			console.debug(data);
-			window.location.reload();
-		});
+		var self = this;
+		$.post("login", loginFormData, function(data){
+			if(data.login){
+				window.location.reload();
+			} else {
+				self.model.set({errorMessage: data.error});
+			}
+		},"json");
 		return false;
 	}
 });

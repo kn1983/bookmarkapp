@@ -119,7 +119,7 @@ function checkRegistration($data)
 		if (!sizeof($error))
 		{
 			$sql_ary = array(
-				'type'				=> Config::userNew,
+				'type'				=> Config::USER_NEW,
 				'username'			=> $data['username'],
 				'username_clean'	=> strtolower($data['username']),
 				'password'			=> $passwordHash->HashPassword($data['password']),

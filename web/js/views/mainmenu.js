@@ -7,12 +7,12 @@ window.MainMenuView = Backbone.View.extend({
 		{name: "Logout", url: "logout"}
 	],
 	loggedOutItems: [
-		{name: "Bookmarks", url: "#!/bookmarks"}
+		{name: "Bookmarks", url: "#!/bookmarks"},
+		{name: "Register", url: "#!/register"}
 	],
 	initialize: function(){
 		if(app.loggedIn){
 			this.collection = new MainMenuCollection(this.loggedInItems);
-			console.debug(app.loggedIn);
 		} else {
 			this.collection = new MainMenuCollection(this.loggedOutItems);
 		}
