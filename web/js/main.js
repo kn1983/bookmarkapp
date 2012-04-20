@@ -4,6 +4,7 @@ var AppRouter = Backbone.Router.extend({
 		"!/bookmarks": "bookmarks"
 	},
 	loggedIn: false,
+
 	initialize: function(){
 		this.before(function(){
 			app.loggedIn = app.userInfo.first().get("logged_in");

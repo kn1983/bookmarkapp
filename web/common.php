@@ -1,7 +1,5 @@
 <?php
 
-use Classes\Config;
-
 define('_DIR_', '../');
 
 // Include some common classes
@@ -21,12 +19,11 @@ $request  = new Classes\Request();
 $session  = new Classes\Session();
 $twig 	  = new Twig_Environment($loader, array('cache' => _DIR_ . 'cache/templates', 'auto_reload' => true,));
 
-// Connect to the database
-$db->sql_connect(Config::dbHost, Config::dbUser, Config::dbPw, Config::dbName, Config::dbPort);
-
 // Do the session thing
 $session->sessionBegin();
 unset($session->data['password']);
+
+/*var_dump($_COOKIE);*/
 
 // Make an array of all global variables
 $data = array(
