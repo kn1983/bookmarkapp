@@ -35,41 +35,41 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
         ";
         // line 13
         $this->displayBlock('header', $context, $blocks);
-        // line 22
+        // line 17
         echo " 
 
         <div id=\"sidebarFirst\">
             ";
-        // line 25
+        // line 20
         $this->displayBlock('sidebarFirst', $context, $blocks);
-        // line 28
+        // line 23
         echo "        </div>
 
         <div id=\"content\">
         \t";
-        // line 31
+        // line 26
         $this->displayBlock('content', $context, $blocks);
-        // line 34
+        // line 29
         echo "        </div>
 
         <div id=\"sidebarSecond\">
             ";
-        // line 37
+        // line 32
         $this->displayBlock('sidebarSecond', $context, $blocks);
-        // line 40
+        // line 35
         echo "        </div>
 
         <div id=\"footer\">
             ";
-        // line 43
+        // line 38
         $this->displayBlock('footer', $context, $blocks);
-        // line 46
+        // line 41
         echo "        </div>
 
         ";
-        // line 48
+        // line 43
         $this->displayBlock('scripts', $context, $blocks);
-        // line 73
+        // line 79
         echo "        
     </body>
 </html>";
@@ -87,7 +87,7 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
         echo "            <title>";
         $this->displayBlock('title', $context, $blocks);
         echo " - My Webpage</title>
-            <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/base.css\" />
+            <link type=\"<textarea></textarea>xt/css\" rel=\"stylesheet\" href=\"web/css/base.css\" />
             <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/header.css\" />
             <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/forms.css\" />
         ";
@@ -98,61 +98,51 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
     {
         // line 14
         echo "        <div id=\"header\">
-            ";
-        // line 15
-        if (isset($context["global"])) { $_global_ = $context["global"]; } else { $_global_ = null; }
-        if ($this->getAttribute($_global_, "userLoggedIn")) {
-            // line 16
-            echo "                Logged in
-                <a href=\"logout\">Logout</a>
-            ";
-        } else {
-            // line 19
-            echo "                Not logged in
-            ";
-        }
-        // line 21
-        echo "        </div>
+
+        </div>
         ";
     }
 
-    // line 25
+    // line 20
     public function block_sidebarFirst($context, array $blocks = array())
     {
-        // line 26
+        // line 21
         echo "                Sidebar first
             ";
     }
 
-    // line 31
+    // line 26
     public function block_content($context, array $blocks = array())
     {
-        // line 32
+        // line 27
         echo "                Content
             ";
     }
 
-    // line 37
+    // line 32
     public function block_sidebarSecond($context, array $blocks = array())
     {
-        // line 38
+        // line 33
         echo "                Sidebar second
             ";
     }
 
-    // line 43
+    // line 38
     public function block_footer($context, array $blocks = array())
     {
-        // line 44
+        // line 39
         echo "               footer
             ";
     }
 
-    // line 48
+    // line 43
     public function block_scripts($context, array $blocks = array())
     {
-        // line 49
-        echo "            <script type=\"text/template\" id=\"login-form-tpl\">   
+        // line 44
+        echo "            <script type=\"text/template\" id=\"header-tpl\">
+                <h1>Bookmarks</h1>
+            </script>
+            <script type=\"text/template\" id=\"login-form-tpl\">   
                 <form method=\"post\" action=\"login\" id=\"login\">
                     <fieldset>              
                         <label for=\"username\">Username: </label>
@@ -171,10 +161,18 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
                         <input class=\"btnGrey loginBtn\" type=\"submit\" value=\"Login\" />
                     </fieldset>
                 </form>
-            </script>        
+            </script>
+            <script type=\"text/template\" id=\"main-menu-item\">
+                <a href=\"<%= url %>\"><%= name %></a>
+            </script>       
             <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js\"></script>
             <script type=\"text/javascript\" src=\"web/js/libs/underscore-min.js\"></script>
             <script type=\"text/javascript\" src=\"web/js/libs/backbone-min.js\"></script>
+            <script type=\"text/javascript\" src=\"web/js/models/userinfo.js\"></script>
+            <script type=\"text/javascript\" src=\"web/js/models/mainmenu.js\"></script>  
+            <script type=\"text/javascript\" src=\"web/js/views/loginform.js\"></script> 
+            <script type=\"text/javascript\" src=\"web/js/views/header.js\"></script> 
+            <script type=\"text/javascript\" src=\"web/js/views/mainmenu.js\"></script> 
             <script type=\"text/javascript\" src=\"web/js/main.js\"></script>        
         ";
     }
