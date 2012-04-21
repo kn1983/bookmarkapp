@@ -19,7 +19,7 @@ window.RegisterFormView = Backbone.View.extend({
 	register: function(event){
 		var registerFormData = $("#register").serialize();
 		var self = this;
-		$.post("register", registerFormData, function(data){
+		$.post("api/user", registerFormData, function(data){
 			if(data.registration){
 				window.location.reload();
 			} else {

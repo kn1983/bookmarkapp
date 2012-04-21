@@ -5,12 +5,12 @@ use Classes\Forms;
 use Classes\Security\FormValidation;
 
 require 'common.php';
-require _DIR_ . 'Classes/Security/FormValidation.php';
-require _DIR_ . 'Classes/Security/PasswordHash.php';
-require _DIR_ . 'Classes/Forms.php';
+require _DIR_ . 'api/Classes/Security/FormValidation.php';
+require _DIR_ . 'api/Classes/Security/PasswordHash.php';
+require _DIR_ . 'api/Classes/Forms.php';
 
 // Get requested page
-$mode = $request->requestVar('mode','');
+$mode = $app->request()->params('mode');
 
 // Just do a redirect if the user tries to access these pages while logged in
 if ($mode == 'register' || $mode == 'login')
