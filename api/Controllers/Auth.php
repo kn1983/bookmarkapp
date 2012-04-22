@@ -2,7 +2,6 @@
 
 use Classes\Config;
 use Classes\Session;
-use Classes\Request;
 use Classes\Security\PasswordHash;
 use Classes\Security\Validation;
 
@@ -17,13 +16,13 @@ class AuthController
 	{
 		global $app;
 
-		$this->user_id    = (int) $app->getCookie(Config::COOKIE_NAME . '_u', 1);
-		$this->session_id = $app->getCookie(Config::COOKIE_NAME . '_sid', '');		
+		$this->user_id    = (int) $app->getCookie(Config::COOKIE_NAME . '_u');
+		$this->session_id = $app->getCookie(Config::COOKIE_NAME . '_sid');		
 	}
 
 	public function getAuthInformation()
 	{
-		global $db;
+		global $app;
 
 		$sql = "SELECT u.id, u.type, u.username, u.form_salt
 				FROM sessions AS s
@@ -32,19 +31,20 @@ class AuthController
 				WHERE s.sid = '{$this->session_id}' 
 				AND s.user_id = '{$this->user_id}'
 				LIMIT 1";
-		$result = $db->sql_query($sql);
-		$this->data = $db->sql_fetchrow($result);
+		$result = $app->db->sql_query($sql);
+		$this->data = $app->db->sql_fetchrow($result);
 
-		$this->data['logged_in'] = $this->loginStatus();
+		$this->setLoginStatus();
 
 		echo json_encode($this->data);
 	}
 
-	public function loginStatus()
-	{
-		$status = ($this->data['id'] != Config::GUEST_ID && ($this->data['type'] == Config::USER_NEW || $this->data['type'] == Config::USER_NORMAL || $this->data['type'] == Config::USER_ADMIN)) ? true : false;
+	public function setLoginStatus() {
+		$this->data['logged_in'] = ($this->data['type'] == Config::USER_NEW || $this->data['type'] == Config::USER_NORMAL || $this->data['type'] == Config::USER_ADMIN) ? true : false;
+	}
 
-		return $status;
+	public function getLoginStatus() {
+		return $this->data['logged_in'];
 	}
 
 	public function logInUser()
@@ -69,9 +69,8 @@ class AuthController
 
 	private function checkLogin($data)
 	{
-		global $db;
+		global $app;
 
-		require 'Classes/Request.php';
 		require 'Classes/Session.php';
 		require 'Classes/Security/PasswordHash.php';
 		require 'Classes/Security/FormValidation.php';
@@ -104,8 +103,8 @@ class AuthController
 						FROM users
 						WHERE username_clean = '{$username_clean}'
 						AND type IN (" . Config::USER_NEW . ", " . Config::USER_NORMAL . ", " . Config::USER_ADMIN . ")";
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
+				$result = $app->db->sql_query($sql);
+				$row = $app->db->sql_fetchrow($result);
 
 				if ($row['id']) {
 					// Check match of passwords and log in the user if match
@@ -116,9 +115,9 @@ class AuthController
 							'last_visit' => time(),					
 						);
 
-						$sql = 'UPDATE users SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+						$sql = 'UPDATE users SET ' . $app->db->sql_build_array('UPDATE', $sql_ary) . '
 								WHERE id = ' . $row['id'];
-						$db->sql_query($sql);							
+						$app->db->sql_query($sql);							
 
 						// Creates the session that actually logs in the user
 						$session->sessionCreate($row['id'], $data['autologin']);

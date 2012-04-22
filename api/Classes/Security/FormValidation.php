@@ -44,15 +44,15 @@ class FormValidation
 	*/
 	private function validate_userexist($username)
 	{
-		global $db;
+		global $app;
 
 		$username = strtolower($username);
 		
 		$sql = "SELECT username 
 				FROM users 
 				WHERE username_clean = '{$username}'";
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
+		$result = $app->db->sql_query($sql);
+		$row = $app->db->sql_fetchrow($result);
 		
 		// Check if the user exist 
 		if (!$row['username']) 
@@ -178,7 +178,7 @@ class FormValidation
 	*/
 	private function validate_username($username)
 	{
-		global $db;
+		global $app;
 
 		if ($username == '')
 		{
@@ -195,8 +195,8 @@ class FormValidation
 		$sql = "SELECT username
 				FROM users
 				WHERE username_clean = '{$clean_username}'";		
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
+		$result = $app->db->sql_query($sql);
+		$row = $app->db->sql_fetchrow($result);
 
 		if ($row)
 		{
@@ -232,7 +232,7 @@ class FormValidation
 	*/
 	private function validate_email($email)
 	{
-		global $db;
+		global $app;
 
 		if ($email == '')
 		{
@@ -249,8 +249,8 @@ class FormValidation
 		$sql = "SELECT email
 				FROM users
 				WHERE email = '{$email}'";		
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
+		$result = $app->db->sql_query($sql);
+		$row = $app->db->sql_fetchrow($result);
 
 		if ($row)
 		{

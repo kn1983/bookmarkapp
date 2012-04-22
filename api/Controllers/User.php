@@ -2,7 +2,6 @@
 
 use Classes\Config;
 use Classes\Session;
-use Classes\Request;
 use Classes\Security\PasswordHash;
 use Classes\Security\Validation;
 
@@ -19,14 +18,14 @@ class UserController
 	*/
 	public function getUserInformation($user_id)
 	{
-		global $db;
+		global $app;
 
 		$sql = "SELECT id, username
 				FROM users
 				WHERE id = '{$user_id}' 
 				LIMIT 1";
-		$result = $db->sql_query($sql);
-		$this->data = $db->sql_fetchrow($result);
+		$result = $app->db->sql_query($sql);
+		$this->data = $app->db->sql_fetchrow($result);
 
 
 		echo json_encode($this->data);
@@ -56,9 +55,8 @@ class UserController
 
 	private function checkRegistration($data)
 	{
-		global $db;
+		global $app;
 
-		require 'Classes/Request.php';
 		require 'Classes/Session.php';
 		require 'Classes/Security/PasswordHash.php';
 		require 'Classes/Security/FormValidation.php';
@@ -103,8 +101,8 @@ class UserController
 					'last_visit'		=> time(),			
 				);
 
-				$sql = "INSERT INTO users " . $db->sql_build_array('INSERT', $sql_ary);
-				$db->sql_query($sql);
+				$sql = "INSERT INTO users " . $app->db->sql_build_array('INSERT', $sql_ary);
+				$app->db->sql_query($sql);
 
 				// Log in the user and redirect to the startpage or maybe change to user page or something later?
 				$user_id = mysql_insert_id();

@@ -4,10 +4,8 @@ use Classes\Config;
 
 require 'Slim/Slim.php';
 require 'Classes/Config.php';
-require 'Classes/Db.php';
 
 $app = new Slim();
-$db = new Classes\Db();
 
 $app->get('/auth', function () {
 	require 'Controllers/Auth.php';

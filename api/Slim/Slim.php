@@ -157,9 +157,11 @@ class Slim {
         $this->response = new Slim_Http_Response();
         $this->router = new Slim_Router($this->request, $this->response);
         $this->settings = array_merge(self::getDefaultSettings(), $userSettings);
-        $this->middleware = array($this);
+        $this->middleware = array($this);       
         $this->add(new Slim_Middleware_Flash());
         $this->add(new Slim_Middleware_MethodOverride());
+
+        $this->db = new Slim_Database_Dbal($this->settings);
 
         //Determine application mode
         $this->getMode();
@@ -229,6 +231,12 @@ class Slim {
             'log.writer' => null,
             'log.level' => 4,
             'log.enabled' => true,
+            //Database Settings
+            'db.host' => 'localhost',
+            'db.port' => '',
+            'db.name' => 'page',
+            'db.user' => 'root',
+            'db.pw'   => '',        
             //View
             'templates.path' => './templates',
             'view' => 'Slim_View',
