@@ -1,4 +1,4 @@
-window.MainMenuItem = Backbone.Model.extend();
-window.MainMenuCollection = Backbone.Collection.extend({
-	model: MainMenuItem,
-});
+define(function(){
+	var MainMenuItem = Backbone.Model.extend();
+	return MainMenuItem;
+})

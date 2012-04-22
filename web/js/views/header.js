@@ -1,18 +1,22 @@
-window.HeaderView = Backbone.View.extend({
-	tagName: "div",
-	className: "header-content",
-	template: _.template($("#header-tpl").html()),
+define([
+	'views/mainmenu',
+	'views/loginForm',
+	'models/login',
+	'text!tpls/header.html'
+	], function(MainMenuView, LoginFormView, LoginModel, headerTpl){
+	var HeaderView = Backbone.View.extend({
+		tagName: "div",
+		className: "header-content",
+		template: _.template(headerTpl),
+		render: function(){
+			this.$el.html(this.template);
+			this.$el.append(new MainMenuView({loggedIn: this.options.loggedIn}).render().el);
 
-	render: function(eventName){
-		this.$el.html(this.template());
-		if(app.loggedIn){
-			this.$el.append(new MainMenuView().render().el);
-		} else {
-			this.$el.append(
-				new LoginFormView({model: new LoginModel()}).render().el, 
-				new MainMenuView().render().el
-			);
+			if(!this.options.loggedIn){
+				this.$el.append(new LoginFormView({model: new LoginModel()}).render().el);
+			}
+			return this;
 		}
-		return this;
-	}
+	});
+	return HeaderView;
 });
