@@ -1,9 +1,6 @@
 <?php
 
-use Classes\Config;
-
 require 'Slim/Slim.php';
-require 'Classes/Config.php';
 
 $app = new Slim();
 

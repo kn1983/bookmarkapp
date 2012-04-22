@@ -1,14 +1,12 @@
 <?php
 
-namespace Classes\Security;
-
 #
 # PHP password hashing framework.
 # Written by Solar Designer.
 #
 # Reference: http://www.openwall.com/phpass/
 #
-class PasswordHash 
+class Slim_Security_PasswordHash 
 {
 	public $itoa64;
 	public $iteration_count_log2;

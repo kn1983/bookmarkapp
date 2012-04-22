@@ -1,8 +1,6 @@
 <?php
 
-namespace Classes;
-
-class Session 
+class Slim_Session 
 {
 	public $data;
 
@@ -17,20 +15,23 @@ class Session
 	public $ip;
 	public $page_url;
 
-	public function __construct()
+	public function __construct(Slim_Http_Request $request, Slim_Http_Response $response, $settings)
 	{
-		global $app;
+
+        $this->request = $request;
+        $this->response = $response;
+        $this->config = $settings;		
 
 		$this->time 		= time();
-		$this->browser		= $app->request()->getUserAgent();
-		$this->ip 			= $app->request()->getIp();
-		$this->server_name 	= $app->request()->getHost();
+		$this->browser		= $this->request->getUserAgent();
+		$this->ip 			= $this->request->getIp();
+		$this->server_name 	= $this->request->getHost();
 
 		// Check if we have a cookie set
-		if ($app->getCookie(Config::COOKIE_NAME . '_sid') || $app->getCookie(Config::COOKIE_NAME . '_u')) {
-			$this->cookie_id 	= (int) $app->getCookie(Config::COOKIE_NAME . '_u');
-			$this->cookie_key 	= $app->getCookie(Config::COOKIE_NAME . '_k');
-			$this->session_id 	= $app->getCookie(Config::COOKIE_NAME . '_sid');
+		if ($request->cookies($this->config['cookies.name'] . '_sid') || $request->cookies($this->config['cookies.name'] . '_u')) {
+			$this->cookie_id 	= (int) $request->cookies($this->config['cookies.name'] . '_u');
+			$this->cookie_key 	= $request->cookies($this->config['cookies.name'] . '_k');
+			$this->session_id 	= $request->cookies($this->config['cookies.name'] . '_sid');
 		}
 	}
 
@@ -75,7 +76,7 @@ class Session
 					// Check if the session is still valid
 					if (!$this->data['autologin']) 
 					{
-						if ($this->data['time'] < $this->time - (Config::SESSION_LENGTH + 60)) 
+						if ($this->data['time'] < $this->time - $this->config['cookies.lifetime']) 
 						{
 							$session_expired = true;
 						}
@@ -96,7 +97,7 @@ class Session
 							$app->db->sql_query($sql);
 						}
 
-						$this->data['logged_in'] = ($this->data['id'] != Config::GUEST_ID && ($this->data['type'] == Config::USER_NEW || $this->data['type'] == Config::USER_NORMAL || $this->data['user_type'] == Config::USER_ADMIN)) ? true : false;					
+						$this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.normal'] || $this->data['user_type'] == $this->config['usergroup.admin'])) ? true : false;					
 						return true;
 					}
 
@@ -135,7 +136,7 @@ class Session
 					LEFT JOIN session_keys AS k
 					ON k.user_id = u.id
 					WHERE u.id = '{$this->cookie_id}'
-					AND u.type IN (" . Config::USER_NEW . ", " . Config::USER_NORMAL . ", " . Config::USER_ADMIN . ")
+					AND u.type IN (" . $this->config['usergroup.new'] . ", " . $this->config['usergroup.normal'] . ", " . $this->config['usergroup.admin'] . ")
 					AND k.key_id = '{$cookie_key}'";
 			$result = $app->db->sql_query($sql);
 			$this->data = $app->db->sql_fetchrow($result);
@@ -150,7 +151,7 @@ class Session
 			$sql = "SELECT u.*, u.id AS user_id
 					FROM users AS u
 					WHERE id = '{$this->cookie_id}'
-					AND type IN (" . Config::USER_NEW . ", " . Config::USER_NORMAL . ", " . Config::USER_ADMIN . ")";
+					AND type IN (" . $this->config['usergroup.new'] . ", " . $this->config['usergroup.normal'] . ", " . $this->config['usergroup.admin'] . ")";
 			$result = $app->db->sql_query($sql);
 			$this->data = $app->db->sql_fetchrow($result);
 		}
@@ -159,7 +160,7 @@ class Session
 		if (!sizeof($this->data) || !is_array($this->data)) 
 		{
 			$this->cookie_key = '';
-			$this->cookie_id = Config::GUEST_ID;
+			$this->cookie_id = $this->config['user.guest'];
 
 			$sql = "SELECT u.*, u.id AS user_id 
 					FROM users AS u
@@ -170,7 +171,7 @@ class Session
 		}
 
 		$this->data['last_visit'] = $this->time;
-		$this->data['logged_in'] = ($this->data['id'] != Config::GUEST_ID && ($this->data['type'] == Config::USER_NEW || $this->data['type'] == Config::USER_NORMAL || $this->data['user_type'] == Config::USER_ADMIN)) ? true : false;
+		$this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.normal'] || $this->data['user_type'] == $this->config['usergroup.admin'])) ? true : false;
 
 		$session_autologin = (($this->cookie_key || $autologin) && $this->data['logged_in']) ? true : false;
 
@@ -185,7 +186,7 @@ class Session
 
 		$sql = "DELETE FROM sessions
 				WHERE sid = '{$this->session_id}'
-				AND user_id = " . Config::GUEST_ID;
+				AND user_id = " . $this->config['user.guest'];
 		$app->db->sql_query($sql);
 
 		$this->session_id = $this->data['sid'] = md5(uniqid());
@@ -210,7 +211,7 @@ class Session
 		$sql = "SELECT COUNT(sid) AS sessions
 				FROM sessions
 				WHERE user_id = '{$this->data['user_id']}'
-				AND time >= " . (int) ($this->time - Config::SESSION_LENGTH);
+				AND time >= " . (int) ($this->time - $this->config['cookies.lifetime']);
 		$result = $app->db->sql_query($sql);
 		$row = $app->db->sql_fetchrow($result);
 
@@ -239,7 +240,7 @@ class Session
 				AND user_id = '{$this->data['user_id']}'";
 		$app->db->sql_query($sql);
 
-		if ($this->data['user_id'] != Config::GUEST_ID) {
+		if ($this->data['user_id'] != $this->config['user.guest']) {
 
 			// Delete existing session, update last visit info first!
 			if (!isset($this->data['time'])) 
@@ -262,7 +263,7 @@ class Session
 
 			$sql = "SELECT *
 					FROM users
-					WHERE id = " . Config::GUEST_ID;
+					WHERE id = " . $this->config['user.guest'];
 			$result = $app->db->sql_query($sql);
 			$this->data = $app->db->sql_fetchrow($result);
 		}
@@ -325,7 +326,7 @@ class Session
 	*/	
 	private function setNewCookie($name, $cookie_data)
 	{
-		$name = Config::COOKIE_NAME . '_' . $name;
+		$name = $this->config['cookies.name'] . '_' . $name;
 		$expires = $this->time + 31536000;		
 		$domain = $this->server_name;
 

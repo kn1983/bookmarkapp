@@ -50,11 +50,15 @@ class Slim_Database_Dbal
 	public $any_char;
 	public $one_char;
 
+	public $config;
+
 	/**
 	* Constructor
 	*/
 	public function __construct($config)
 	{
+		$this->config = $config;
+
 		$this->num_queries = array(
 			'cached'		=> 0,
 			'normal'		=> 0,
@@ -66,19 +70,19 @@ class Slim_Database_Dbal
 		$this->one_char = chr(0) . '_';
 
 		// Connect to the database
-		$this->sql_connect($config);
+		$this->sql_connect();
 	}
 
 	/**
 	* Establish a database connection
 	*/
-	public function sql_connect($config)
+	public function sql_connect()
 	{
-		$this->db_connect_id = mysql_connect($config['db.host'], $config['db.user'], $config['db.pw']);
+		$this->db_connect_id = mysql_connect($this->config['db.host'], $this->config['db.user'], $this->config['db.pw']);
 
 		if ($this->db_connect_id)
 		{
-			if (mysql_select_db($config['db.name'], $this->db_connect_id))
+			if (mysql_select_db($this->config['db.name'], $this->db_connect_id))
 			{
 
 				mysql_query("SET NAMES 'utf8'", $this->db_connect_id);

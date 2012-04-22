@@ -1,10 +1,5 @@
 <?php
 
-use Classes\Config;
-use Classes\Session;
-use Classes\Security\PasswordHash;
-use Classes\Security\Validation;
-
 class UserController
 {
 	public $user_id;
@@ -33,16 +28,16 @@ class UserController
 
 	public function addNewUser()
 	{
-		global $db, $app;
+		global $app;
 
 		$submitReg	= (isset($_POST['register'])) ? true : false;
 
 		/*$form_token = Forms::addFormKey('ucp_register');*/
 
 		$data = array(
-			'username'	=> $app->request()->post('username', ''),
-			'password'	=> $app->request()->post('password', ''),
-			'email'		=> $app->request()->post('email', ''),
+			'username'	=> $app->request()->post('username'),
+			'password'	=> $app->request()->post('password'),
+			'email'		=> $app->request()->post('email'),
 		);
 
 
@@ -57,12 +52,8 @@ class UserController
 	{
 		global $app;
 
-		require 'Classes/Session.php';
-		require 'Classes/Security/PasswordHash.php';
-		require 'Classes/Security/FormValidation.php';
-		$session = new Classes\Session();
-		$validation = new Classes\Security\FormValidation();
-		$passwordHash = new Classes\Security\PasswordHash();
+		$validation = new Slim_Forms_FormValidator();
+		$passwordHash = new Slim_Security_PasswordHash();
 
 		$error = array();
 
@@ -92,7 +83,7 @@ class UserController
 			if (!sizeof($error))
 			{
 				$sql_ary = array(
-					'type'				=> Config::USER_NEW,
+					'type'				=> $app->config('usergroup.new'),
 					'username'			=> $data['username'],
 					'username_clean'	=> strtolower($data['username']),
 					'password'			=> $passwordHash->HashPassword($data['password']),
@@ -106,7 +97,7 @@ class UserController
 
 				// Log in the user and redirect to the startpage or maybe change to user page or something later?
 				$user_id = mysql_insert_id();
-				$session->sessionCreate($user_id);
+				$app->session->sessionCreate($user_id);
 
 				$message['registration'] = true;
 				echo json_encode($message);

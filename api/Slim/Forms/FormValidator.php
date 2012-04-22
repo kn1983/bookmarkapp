@@ -1,14 +1,12 @@
 <?php
 
-namespace Classes\Security;
-
 #
 # Form Validator.
 # 
 # Starts with validateData and then do calls to 
 # the other methods depending on the array given.
 #
-class FormValidation
+class Slim_Forms_FormValidator
 {
 
 	public function validateData($data, $val_ary)
@@ -27,7 +25,7 @@ class FormValidation
 				$function = array_shift($validate);
 				array_unshift($validate, $data[$var]);
 
-				$newValidation = new FormValidation();
+				$newValidation = new Slim_Forms_FormValidator();
 				if ($result = call_user_func_array(array($newValidation, 'validate_' . $function), $validate))
 				{
 					$error = $result;

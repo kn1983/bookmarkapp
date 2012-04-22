@@ -1,10 +1,6 @@
 <?php
 
-namespace Classes;
-
-use Classes\Request;
-
-class Forms
+class Slim_Forms_FormKeys
 {
 
 	/**

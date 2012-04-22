@@ -2,7 +2,6 @@
 
 use Classes\Config;
 use Classes\Session;
-use Classes\Security\PasswordHash;
 use Classes\Security\Validation;
 
 class AuthController 
@@ -14,10 +13,10 @@ class AuthController
 
 	public function __construct()
 	{
-		global $app;
+		global $app;	
 
-		$this->user_id    = (int) $app->getCookie(Config::COOKIE_NAME . '_u');
-		$this->session_id = $app->getCookie(Config::COOKIE_NAME . '_sid');		
+		$this->user_id    = (int) $app->getCookie($app->config('cookies.name') . '_u');
+		$this->session_id = $app->getCookie($app->config('cookies.name') . '_sid');		
 	}
 
 	public function getAuthInformation()
@@ -40,7 +39,9 @@ class AuthController
 	}
 
 	public function setLoginStatus() {
-		$this->data['logged_in'] = ($this->data['type'] == Config::USER_NEW || $this->data['type'] == Config::USER_NORMAL || $this->data['type'] == Config::USER_ADMIN) ? true : false;
+		global $app;
+
+		$this->data['logged_in'] = ($this->data['id'] != $app->config('user.guest') && ($this->data['type'] == $app->config('usergroup.new') || $this->data['type'] == $app->config('usergroup.registered') || $this->data['user_type'] == $app->config('usergroup.admin'))) ? true : false;					
 	}
 
 	public function getLoginStatus() {
@@ -56,9 +57,9 @@ class AuthController
 		/*$form_token = Forms::addFormKey('ucp_login');*/
 
 		$data = array(
-			'username'	=> $app->request()->post('username', ''),
-			'password'	=> $app->request()->post('password', ''),
-			'autologin'	=> $app->request()->post('autologin', 0),
+			'username'	=> $app->request()->post('username'),
+			'password'	=> $app->request()->post('password'),
+			'autologin'	=> $app->request()->post('autologin'),
 		);
 
 		if ($submit)
@@ -71,12 +72,8 @@ class AuthController
 	{
 		global $app;
 
-		require 'Classes/Session.php';
-		require 'Classes/Security/PasswordHash.php';
-		require 'Classes/Security/FormValidation.php';
-		$session = new Classes\Session();
-		$validation = new Classes\Security\FormValidation();
-		$passwordHash = new Classes\Security\PasswordHash();
+		$validation = new Slim_Forms_FormValidator();
+		$passwordHash = new Slim_Security_PasswordHash();
 
 		$message = array(
 			'login' 	=> false,
@@ -102,7 +99,7 @@ class AuthController
 				$sql = "SELECT id, username, password, email, type
 						FROM users
 						WHERE username_clean = '{$username_clean}'
-						AND type IN (" . Config::USER_NEW . ", " . Config::USER_NORMAL . ", " . Config::USER_ADMIN . ")";
+						AND type IN (" . $app->config('usergroup.new') . ", " . $app->config('usergroup.normal') . ", " . $app->config('usergroup.admin') . ")";
 				$result = $app->db->sql_query($sql);
 				$row = $app->db->sql_fetchrow($result);
 
@@ -120,7 +117,7 @@ class AuthController
 						$app->db->sql_query($sql);							
 
 						// Creates the session that actually logs in the user
-						$session->sessionCreate($row['id'], $data['autologin']);
+						$app->session->sessionCreate($row['id'], $data['autologin']);
 
 						$message['login'] = true;
 						echo json_encode($message);

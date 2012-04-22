@@ -160,8 +160,8 @@ class Slim {
         $this->middleware = array($this);       
         $this->add(new Slim_Middleware_Flash());
         $this->add(new Slim_Middleware_MethodOverride());
-
         $this->db = new Slim_Database_Dbal($this->settings);
+        $this->session = new Slim_Session($this->request, $this->response, $this->settings);
 
         //Determine application mode
         $this->getMode();
@@ -231,16 +231,17 @@ class Slim {
             'log.writer' => null,
             'log.level' => 4,
             'log.enabled' => true,
-            //Database Settings
+            //Database
             'db.host' => 'localhost',
             'db.port' => '',
             'db.name' => 'page',
             'db.user' => 'root',
-            'db.pw'   => '',        
+            'db.pw'   => '',
             //View
             'templates.path' => './templates',
             'view' => 'Slim_View',
             //Cookies
+            'cookies.name' => 'page_kl7dk',
             'cookies.lifetime' => '20 minutes',
             'cookies.path' => '/',
             'cookies.domain' => null,
@@ -251,7 +252,14 @@ class Slim {
             'cookies.cipher' => MCRYPT_RIJNDAEL_256,
             'cookies.cipher_mode' => MCRYPT_MODE_CBC,
             //HTTP
-            'http.version' => '1.1'
+            'http.version' => '1.1',
+            //User group types
+            'usergroup.admin' => 1,
+            'usergroup.new' => 2,
+            'usergroup.normal' => 3,
+            'usergroup.guest' => 4,
+            //Identifier for a guest user
+            'user.guest' => 1,
         );
     }
 

@@ -484,14 +484,6 @@ class Slim_Http_Request {
     }
 
     /**
-     * Get Request URI
-     * @return string
-     */
-    public function getRequestUri() {
-        return $_SERVER['REQUEST_URI'];
-    }
-
-    /**
      * Get Referrer
      * @return string|null
      */
