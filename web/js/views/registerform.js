@@ -1,4 +1,3 @@
-
 define(['text!tpls/registerForm.html'], function(registerFormTpl){
 	var RegisterFormView = Backbone.View.extend({
 		tagName: "div",
