@@ -684,5 +684,4 @@ class Slim_Database_Dbal
 		mysql_close($this->db_connect_id);
 	}	
 }
-
 ?>

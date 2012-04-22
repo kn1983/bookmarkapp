@@ -17,15 +17,15 @@ $app->post('/auth', function () use ($app) {
 });
 
 $app->get('/user/:id', function ($id) {
-	require 'Controllers/User.php';
-	$user = new UserController();
-	$user->getUserInformation($id);
+	$user = new Slim_User($id);
+	$data = $user->getUser();
+	echo json_encode($data);
 });
 
 $app->post('/user', function () use ($app) { 
-	require 'Controllers/User.php';
-	$user = new UserController();
-	$user->addNewUser();
+	$user = new Slim_User();
+	$data = $user->setUser();
+	echo json_encode($data);
 });
 
 $app->run();

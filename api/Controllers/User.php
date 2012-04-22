@@ -7,6 +7,15 @@ class UserController
 
 	public $data;
 
+	public function __construct($id)
+	{
+		$this->id = $id;
+	}
+
+	public function getUser()
+	{
+
+	}
 
 	/**
 	* Returns userdata
