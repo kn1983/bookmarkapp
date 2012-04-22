@@ -1,16 +1,12 @@
 <?php
 
-namespace Classes\Security;
-
-use Classes\Request;
-
 #
 # PHP password hashing framework.
 # Written by Solar Designer.
 #
 # Reference: http://www.openwall.com/phpass/
 #
-class PasswordHash 
+class Slim_Security_PasswordHash 
 {
 	public $itoa64;
 	public $iteration_count_log2;
@@ -18,11 +14,13 @@ class PasswordHash
 
 	public function __construct()
 	{
+		global $app;
+		
 		$this->itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 		$this->iteration_count_log2 = 8;
 
 		$this->random_state = microtime();
-		$this->random_state .= Request::server('REMOTE_ADDR');
+		$this->random_state .= $app->request()->getIp();
 	}
 
 	/**

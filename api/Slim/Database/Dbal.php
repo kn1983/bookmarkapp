@@ -1,12 +1,10 @@
 <?php
 
-namespace Classes;
-
 /**
 * Database Abstraction Layer
 * @package dbal
 */
-class Db
+class Slim_Database_Dbal
 {
 	public $db_connect_id;
 	public $query_result;
@@ -52,11 +50,15 @@ class Db
 	public $any_char;
 	public $one_char;
 
+	public $config;
+
 	/**
 	* Constructor
 	*/
-	public function __construct()
+	public function __construct($config)
 	{
+		$this->config = $config;
+
 		$this->num_queries = array(
 			'cached'		=> 0,
 			'normal'		=> 0,
@@ -68,7 +70,7 @@ class Db
 		$this->one_char = chr(0) . '_';
 
 		// Connect to the database
-		$this->db_connect_id = $this->sql_connect();
+		$this->sql_connect();
 	}
 
 	/**
@@ -76,11 +78,11 @@ class Db
 	*/
 	public function sql_connect()
 	{
-		$this->db_connect_id = mysql_connect(Config::DB_HOST, Config::DB_USER, Config::DB_PW);
+		$this->db_connect_id = mysql_connect($this->config['db.host'], $this->config['db.user'], $this->config['db.pw']);
 
 		if ($this->db_connect_id)
 		{
-			if (mysql_select_db(Config::DB_NAME, $this->db_connect_id))
+			if (mysql_select_db($this->config['db.name'], $this->db_connect_id))
 			{
 
 				mysql_query("SET NAMES 'utf8'", $this->db_connect_id);
@@ -90,12 +92,8 @@ class Db
 				$mode = implode(',', $modes);
 
 				mysql_query("SET SESSION sql_mode='{$mode}'", $this->db_connect_id);
-
-				return $this->db_connect_id;
 			}
 		}
-
-		return $this->sql_error('');
 	}
 
 	/**

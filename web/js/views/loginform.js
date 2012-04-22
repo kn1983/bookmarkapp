@@ -4,7 +4,6 @@ define(['text!tpls/loginForm.html'],
 		tagName: "div",
 		className: "msgForm",
 		template:_.template(loginFormTpl),
-
 		initialize: function(){
 			_.bindAll(this, "render");
 			this.model.on('change', this.render);

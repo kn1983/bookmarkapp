@@ -1,10 +1,6 @@
 <?php
 
-namespace Classes;
-
-use Classes\Request;
-
-class Session 
+class Slim_Session 
 {
 	public $data;
 
@@ -19,19 +15,23 @@ class Session
 	public $ip;
 	public $page_url;
 
-	public function __construct()
+	public function __construct(Slim_Http_Request $request, Slim_Http_Response $response, $settings)
 	{
+
+        $this->request = $request;
+        $this->response = $response;
+        $this->config = $settings;		
+
 		$this->time 		= time();
-		$this->browser		= Request::server('HTTP_USER_AGENT');
-		$this->ip 			= Request::server('REMOTE_ADDR');
-		$this->page_url		= Request::server('REQUEST_URI');
-		$this->server_name 	= Request::server('SERVER_NAME');
+		$this->browser		= $this->request->getUserAgent();
+		$this->ip 			= $this->request->getIp();
+		$this->server_name 	= $this->request->getHost();
 
 		// Check if we have a cookie set
-		if (isset($_COOKIE[Config::COOKIE_NAME . '_sid']) || isset($_COOKIE[Config::COOKIE_NAME . '_u'])) {
-			$this->cookie_id 	= (int) Request::getCookie(Config::COOKIE_NAME . '_u', 0);
-			$this->cookie_key 	= Request::getCookie(Config::COOKIE_NAME . '_k', '');
-			$this->session_id 	= Request::getCookie(Config::COOKIE_NAME . '_sid', '');
+		if ($request->cookies($this->config['cookies.name'] . '_sid') || $request->cookies($this->config['cookies.name'] . '_u')) {
+			$this->cookie_id 	= (int) $request->cookies($this->config['cookies.name'] . '_u');
+			$this->cookie_key 	= $request->cookies($this->config['cookies.name'] . '_k');
+			$this->session_id 	= $request->cookies($this->config['cookies.name'] . '_sid');
 		}
 	}
 
@@ -44,7 +44,7 @@ class Session
 	*/
 	public function sessionBegin()
 	{
-		global $db;
+		global $app;
 
 		if (isset($this->session_id) && isset($this->cookie_id))
 		{
@@ -54,8 +54,8 @@ class Session
 					ON u.id = s.user_id
 					WHERE s.sid = '{$this->session_id}'
 					LIMIT 1";
-			$result = $db->sql_query($sql);
-			$this->data = $db->sql_fetchrow($result);
+			$result = $app->db->sql_query($sql);
+			$this->data = $app->db->sql_fetchrow($result);
 
 			// Did the user exist?
 			if (isset($this->data['user_id']))
@@ -76,7 +76,7 @@ class Session
 					// Check if the session is still valid
 					if (!$this->data['autologin']) 
 					{
-						if ($this->data['time'] < $this->time - (Config::SESSION_LENGTH + 60)) 
+						if ($this->data['time'] < $this->time - $this->config['cookies.lifetime']) 
 						{
 							$session_expired = true;
 						}
@@ -85,27 +85,25 @@ class Session
 					// We continue if the session did not expire or if we are dealing with an autologin
 					if ($session_expired == false) {
 						// Only update session if a minute has passed or if the user enters another page
-						if ($this->time - $this->data['time'] > 60 || $this->data['page'] != $this->page_url) 
+						if ($this->time - $this->data['time'] > 60) 
 						{
 
 							$sql_ary = array(
 								'time' => $this->time,
-								'page' => $this->page_url
 							);
 
-							$sql = "UPDATE sessions SET " . $db->sql_build_array('UPDATE', $sql_ary) . "
+							$sql = "UPDATE sessions SET " . $app->db->sql_build_array('UPDATE', $sql_ary) . "
 									WHERE sid = '{$this->session_id}'";
-							$db->sql_query($sql);
+							$app->db->sql_query($sql);
 						}
 
-						$this->data['logged_in']  = ($this->data['user_id'] != Config::GUEST_ID && ($this->data['type'] == Config::USER_NEW || $this->data['type'] == Config::USER_NORMAL || $this->data['type'] == Config::USER_ADMIN)) ? true : false;
-						
+						$this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.normal'] || $this->data['user_type'] == $this->config['usergroup.admin'])) ? true : false;					
 						return true;
 					}
 
 					$sql = "DELETE FROM sessions
 							WHERE sid = '{$this->session_id}'";
-					$db->sql_query($sql);
+					$app->db->sql_query($sql);
 				
 				}
 			}
@@ -113,7 +111,7 @@ class Session
 
 		// If we got this far it means no cookie... and tadaah! We need to create one ;-)
 		$this->sessionCreate();
-	
+
 	}
 
 	/**
@@ -124,7 +122,7 @@ class Session
 	*/
 	public function sessionCreate($user_id = false, $autologin = false)
 	{
-		global $db;
+		global $app;
 
 		$this->data = array();
 
@@ -138,10 +136,10 @@ class Session
 					LEFT JOIN session_keys AS k
 					ON k.user_id = u.id
 					WHERE u.id = '{$this->cookie_id}'
-					AND u.type IN (" . Config::USER_NEW . ", " . Config::USER_NORMAL . ", " . Config::USER_ADMIN . ")
+					AND u.type IN (" . $this->config['usergroup.new'] . ", " . $this->config['usergroup.normal'] . ", " . $this->config['usergroup.admin'] . ")
 					AND k.key_id = '{$cookie_key}'";
-			$result = $db->sql_query($sql);
-			$this->data = $db->sql_fetchrow($result);
+			$result = $app->db->sql_query($sql);
+			$this->data = $app->db->sql_fetchrow($result);
 
 		} 
 		else if ($user_id !== false && !sizeof($this->data)) 
@@ -153,27 +151,27 @@ class Session
 			$sql = "SELECT u.*, u.id AS user_id
 					FROM users AS u
 					WHERE id = '{$this->cookie_id}'
-					AND type IN (" . Config::USER_NEW . ", " . Config::USER_NORMAL . ", " . Config::USER_ADMIN . ")";
-			$result = $db->sql_query($sql);
-			$this->data = $db->sql_fetchrow($result);
+					AND type IN (" . $this->config['usergroup.new'] . ", " . $this->config['usergroup.normal'] . ", " . $this->config['usergroup.admin'] . ")";
+			$result = $app->db->sql_query($sql);
+			$this->data = $app->db->sql_fetchrow($result);
 		}
 
 		// If no data was returned it means no key was returned or that the user did not exist in the db
 		if (!sizeof($this->data) || !is_array($this->data)) 
 		{
 			$this->cookie_key = '';
-			$this->cookie_id = Config::GUEST_ID;
+			$this->cookie_id = $this->config['user.guest'];
 
 			$sql = "SELECT u.*, u.id AS user_id 
 					FROM users AS u
 					WHERE id = '{$this->cookie_id}'";
 
-			$result = $db->sql_query($sql);
-			$this->data = $db->sql_fetchrow($result);
+			$result = $app->db->sql_query($sql);
+			$this->data = $app->db->sql_fetchrow($result);
 		}
 
 		$this->data['last_visit'] = $this->time;
-		$this->data['logged_in'] = ($this->data['id'] != Config::GUEST_ID && ($this->data['type'] == Config::USER_NEW || $this->data['type'] == Config::USER_NORMAL || $this->data['user_type'] == Config::USER_ADMIN)) ? true : false;
+		$this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.normal'] || $this->data['user_type'] == $this->config['usergroup.admin'])) ? true : false;
 
 		$session_autologin = (($this->cookie_key || $autologin) && $this->data['logged_in']) ? true : false;
 
@@ -181,7 +179,6 @@ class Session
 			'user_id'		=> $this->data['id'],
 			'last_visit'	=> $this->data['last_visit'],
 			'time'			=> $this->time,
-			'page'			=> $this->page_url,
 			'browser'		=> trim(substr($this->browser, 0, 149)),
 			'ip'			=> $this->ip,
 			'autologin'		=> ($session_autologin) ? 1 : 0,
@@ -189,15 +186,15 @@ class Session
 
 		$sql = "DELETE FROM sessions
 				WHERE sid = '{$this->session_id}'
-				AND user_id = " . Config::GUEST_ID;
-		$db->sql_query($sql);
+				AND user_id = " . $this->config['user.guest'];
+		$app->db->sql_query($sql);
 
 		$this->session_id = $this->data['sid'] = md5(uniqid());
 
 		$sql_ary['sid'] = (string) $this->session_id;
 
-		$sql = "INSERT INTO sessions " . $db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
+		$sql = "INSERT INTO sessions " . $app->db->sql_build_array('INSERT', $sql_ary);
+		$app->db->sql_query($sql);
 
 		if ($session_autologin) 
 		{
@@ -214,9 +211,9 @@ class Session
 		$sql = "SELECT COUNT(sid) AS sessions
 				FROM sessions
 				WHERE user_id = '{$this->data['user_id']}'
-				AND time >= " . (int) ($this->time - Config::SESSION_LENGTH);
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
+				AND time >= " . (int) ($this->time - $this->config['cookies.lifetime']);
+		$result = $app->db->sql_query($sql);
+		$row = $app->db->sql_fetchrow($result);
 
 		if ($row['sessions'] <= 1 || empty($this->data['form_salt'])) 
 		{
@@ -226,8 +223,8 @@ class Session
 			$sql = "UPDATE users
 					SET form_salt = '{$this->data['form_salt']}'
 					WHERE id = '{$this->data['user_id']}'";
-			$db->sql_query($sql);
-		}	
+			$app->db->sql_query($sql);
+		}
 	}
 
 	/**
@@ -236,14 +233,14 @@ class Session
 	*/
 	public function sessionKill()
 	{
-		global $db;
+		global $app;
 
 		$sql = "DELETE FROM sessions
 				WHERE sid = '{$this->session_id}'
 				AND user_id = '{$this->data['user_id']}'";
-		$db->sql_query($sql);
+		$app->db->sql_query($sql);
 
-		if ($this->data['user_id'] != Config::GUEST_ID) {
+		if ($this->data['user_id'] != $this->config['user.guest']) {
 
 			// Delete existing session, update last visit info first!
 			if (!isset($this->data['time'])) 
@@ -258,7 +255,7 @@ class Session
 				$sql = "DELETE FROM session_keys
 						WHERE user_id = '{$this->data['user_id']}'
 						AND key_id = '{$cookie_key}'";
-				$db->sql_query($sql);
+				$app->db->sql_query($sql);
 			}
 
 			// Reset the data array
@@ -266,9 +263,9 @@ class Session
 
 			$sql = "SELECT *
 					FROM users
-					WHERE id = " . Config::GUEST_ID;
-			$result = $db->sql_query($sql);
-			$this->data = $db->sql_fetchrow($result);
+					WHERE id = " . $this->config['user.guest'];
+			$result = $app->db->sql_query($sql);
+			$this->data = $app->db->sql_fetchrow($result);
 		}
 
 		$this->setNewCookie('u', '');
@@ -284,7 +281,7 @@ class Session
 	*/
 	private function setLoginKey()
 	{
-		global $db;
+		global $app;
 
 		$key_id = uniqid(hexdec(substr($this->session_id, 0, 8)));
 
@@ -307,16 +304,16 @@ class Session
 			$key = md5($this->cookie_key);
 
 			$sql = "UPDATE session_keys
-					SET " . $db->sql_build_array('UPDATE', $sql_ary) . "
+					SET " . $app->db->sql_build_array('UPDATE', $sql_ary) . "
 					WHERE user_id = '{$this->data['user_id']}'
 					AND key_id = '{$key}'";
 		} 
 		else 
 		{
-			$sql = "INSERT INTO session_keys " . $db->sql_build_array('INSERT', $sql_ary);
+			$sql = "INSERT INTO session_keys " . $app->db->sql_build_array('INSERT', $sql_ary);
 		}
 
-		$db->sql_query($sql);
+		$app->db->sql_query($sql);
 
 		$this->cookie_key = $key_id;
 
@@ -329,12 +326,12 @@ class Session
 	*/	
 	private function setNewCookie($name, $cookie_data)
 	{
-		$name = Config::COOKIE_NAME . '_' . $name;
+		$name = $this->config['cookies.name'] . '_' . $name;
 		$expires = $this->time + 31536000;		
 		$domain = $this->server_name;
 
 		// setcookie($name, $cookie_data, $expires, '', $domain, false, false);
-		setcookie($name, $cookie_data, $expires);		
+		setcookie($name, $cookie_data, $expires, '/');		
 	}
 }
 ?>

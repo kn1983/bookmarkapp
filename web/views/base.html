@@ -41,7 +41,71 @@
         </div>
 
         {% block scripts %}
+<<<<<<< HEAD
             <script type="text/javascript" data-main="web/js/main" src="web/js/libs/require.js"></script>        
+=======
+            <script type="text/template" id="header-tpl">
+                <h1>Bookmarks</h1>
+            </script>
+            <script type="text/template" id="login-form-tpl">   
+                <form method="post" action="login" id="login">
+                    <fieldset>              
+                        <label for="username">Username: </label>
+                        <input type="text" name="username" id="username" />
+
+                        <label for="password">Password: </label>
+                        <input type="password" id="password" name="password" />
+                        
+                        <div class="radioBtn">
+                            <label for="autologin"><strong>Log me on automatically each visit:</strong> </label>
+                            <input type="checkbox" name="autologin" id="autologin" value="1" />                         
+                        </div>
+
+                        <span><a href="#">I forgot my password</a> | <a href="#">I forgot my E-mail</a></span>
+                        <input type="hidden" name="login" value="1" />
+                        <input class="btnGrey loginBtn" type="submit" value="Login" />
+                    </fieldset>
+                </form>
+                 <div class="error">
+                    <%= errorMessage %>
+                </div>
+            </script>
+            <script type="text/template" id="main-menu-item">
+                <a href="<%= url %>"><%= name %></a>
+            </script>
+            <script type="text/template" id="register-form-tpl">
+                <form method="post" action="register" id="register">
+                    <fieldset>              
+                        <label for="username">Username: </label>
+                        <input type="text" name="username" id="username" value="" />
+
+                        <label for="email">E-mail address: </label>
+                        <input type="email" name="email" id="email" value="" /> 
+
+                        <label for="password">Passsword: </label>
+                        <input type="password" id="password" name="password" value="" />
+
+                        <input type="hidden" name="register" value="1" />
+                        <input class="btnGrey submitUser" type="submit" value="Register" />
+                    </fieldset>
+                </form>
+                 <div class="error">
+                    <%= errorMessage %>
+                </div>                
+            </script>       
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+            <script type="text/javascript" src="web/js/libs/underscore-min.js"></script>
+            <script type="text/javascript" src="web/js/libs/backbone-min.js"></script>
+            <script type="text/javascript" src="web/js/models/userinfo.js"></script>
+            <script type="text/javascript" src="web/js/models/mainmenu.js"></script>
+            <script type="text/javascript" src="web/js/models/register.js"></script> 
+            <script type="text/javascript" src="web/js/models/login.js"></script>  
+            <script type="text/javascript" src="web/js/views/loginform.js"></script> 
+            <script type="text/javascript" src="web/js/views/header.js"></script> 
+            <script type="text/javascript" src="web/js/views/mainmenu.js"></script> 
+            <script type="text/javascript" src="web/js/views/registerform.js"></script> 
+            <script type="text/javascript" src="web/js/main.js"></script>        
+>>>>>>> ad59ad5d0caf4a4aa7a7081afbfe7a9c9a2eb089
         {% endblock %}        
     </body>
 </html>
