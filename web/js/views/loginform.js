@@ -18,7 +18,7 @@ define(['text!tpls/loginForm.html'],
 		login: function(event){
 			var loginFormData = $("#login").serialize();
 			var self = this;
-			$.post("login", loginFormData, function(data){
+			$.post("api/auth", loginFormData, function(data){
 				if(data.login){
 					window.location.reload();
 				} else {

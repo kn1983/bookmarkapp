@@ -1,7 +1,7 @@
 define(['../models/userInfo'], function(UserInfo){
 	var UserInfo = Backbone.Collection.extend({
 		model: UserInfo,
-		url: "userinfo"
+		url: "api/auth"
 	});
 	return UserInfo;
 });

@@ -236,7 +236,7 @@ class Slim {
             'db.port' => '',
             'db.name' => 'page',
             'db.user' => 'root',
-            'db.pw'   => '',
+            'db.pw'   => 'root',
             //View
             'templates.path' => './templates',
             'view' => 'Slim_View',

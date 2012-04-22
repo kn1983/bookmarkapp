@@ -12,6 +12,7 @@ define([
 		initialize: function(){
 			var self = this;
 			this.before(function(){
+				console.debug(self.userInfo);
 				$("#header").html(new HeaderView({loggedIn: self.userInfo.first().get("logged_in")}).render().el);
 			});
 		},

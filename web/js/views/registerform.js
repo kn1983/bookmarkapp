@@ -12,12 +12,13 @@ define(['text!tpls/registerForm.html'], function(registerFormTpl){
 			"click .submitUser": "register"
 		},
 		register: function(event){
-			var registerFormData = $("#register").serialize();
-			$.post("register", registerFormData, function(data){
-				console.debug("Success");
-				console.debug(data);
-			},"json");
-			return false;
+			// var registerFormData = $("#register").serialize();
+			// $.post("register", registerFormData, function(data){
+			// 	console.debug("Success");
+			// 	console.debug(data);
+			// },"json");
+			// return false;
 		}
 	});
 	return RegisterFormView;
+});
