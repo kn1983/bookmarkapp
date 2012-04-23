@@ -24,11 +24,6 @@ class Slim_User
     public function __construct($id = false) 
     {
         $this->id = $id;
-
-        $this->message = array(
-            'status'  => false,
-            'error'   => false, 
-        );
     }
 
     /**
@@ -56,15 +51,18 @@ class Slim_User
         global $app;
 
         $validation = new Slim_Forms_FormValidator();
-        $passwordHash = new Slim_Security_PasswordHash();       
+        $passwordHash = new Slim_Security_PasswordHash();
 
-        $data = array(
-            'username'  => $app->request()->post('username'),
-            'password'  => $app->request()->post('password'),
-            'email'     => $app->request()->post('email'),
+        $message = array(
+            'status'  => false,
+            'error'   => false, 
         );
 
-        $error = $validation->validateData($data, array(
+        $this->setUsername($app->request()->post('username'));
+        $this->setPassword($app->request()->post('password'));
+        $this->setEmail($app->request()->post('email'));
+
+        $error = $validation->validateData($this->data, array(
             'password'      => array(
                 array('string', 'password', 5, 60),
                 array('password')),             
@@ -109,50 +107,57 @@ class Slim_User
      * User getters
      */
     public function getId() {
-        return $this->id;
+        return $this->data['id'];
     }
 
     public function getType() {
-        return $this->type;
+        return $this->data['type'];
+    }
+
+    public function getPassword() {
+        return $this->password;
     }
 
     public function getUsername() {
-        return $this->username;
+        return $this->data['username'];
     }
 
     public function getUsernameClean() {
-        return strtolower($this->username);
+        return strtolower($this->data['username']);
     }
 
     public function getEmail() {
-        return strtolower($this->email);
+        return strtolower($this->data['email']);
     }
 
     public function getFormSalt() {
-
-        return $this->form_salt;
+        return $this->data['form_salt'];
     }
 
     /**
      * User setters
      */
     public function setId($id) {
-        $this->id = $id;
+        $this->data['id'] = $id;
     }
 
     public function setType($type) {
-        $this->id = $type;
+        $this->data['type'] = $type;
+    }
+
+    public function setPassword($password) {
+        $this->data['password'] = $password;
     }
 
     public function setUsername($username) {
-        $this->username = $username;
+        $this->data['username'] = $username;
     }
 
     public function setEmail($email) {
-        $this->email = $email;
+        $this->data['email'] = $email;
     }
 
     public function setFormSalt($form_salt) {
-        $this->form_salt = $form_salt;
+        $this->data['form_salt'] = $form_salt;
     }          
 }
