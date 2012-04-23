@@ -3,42 +3,37 @@
 class Slim_User 
 {
 
-    protected $id;
-
-    protected $type;
-
-    protected $username;
-
-    protected $username_clean;
-
-    protected $password;
-
-    protected $email;
-
-    protected $form_salt;
-
     protected $data;
 
     protected $message;
 
-    public function __construct($id = false) 
+    protected $request;
+
+    protected $db;
+
+    protected $session;
+
+    protected $config;
+
+    public function __construct(Slim_Database_Dbal $db) 
     {
-        $this->id = $id;
+        $this->db = $db;
     }
 
     /**
      * Returns an array user information
      */
-    public function getUser() 
+    public function getUser($id) 
     {
-        global $app;
+
+        $this->data['id'] = $id;
 
         $sql = "SELECT id, username
                 FROM users
-                WHERE id = '{$this->id}' 
+                WHERE id = '{$this->data['id']}' 
                 LIMIT 1";
-        $result = $app->db->sql_query($sql);
-        $this->data = $app->db->sql_fetchrow($result);
+        $result = $this->db->sql_query($sql);
+        $this->data = $this->db->sql_fetchrow($result);
 
         return $this->data;
     }
@@ -46,9 +41,11 @@ class Slim_User
     /**
      * Insert a user
      */
-    public function setUser() 
+    public function setUser(Slim_Http_Request $request, Slim_Session $session, $config = false) 
     {
-        global $app;
+        $this->request = $request;
+        $this->session = $session;
+        $this->data['type'] = $config; 
 
         $validation = new Slim_Forms_FormValidator();
         $passwordHash = new Slim_Security_PasswordHash();
@@ -58,9 +55,9 @@ class Slim_User
             'error'   => false, 
         );
 
-        $this->setUsername($app->request()->post('username'));
-        $this->setPassword($app->request()->post('password'));
-        $this->setEmail($app->request()->post('email'));
+        $this->data['username'] = $this->request->post('username');
+        $this->data['password'] = $this->request->post('password');
+        $this->data['email']    = $this->request->post('email');
 
         $error = $validation->validateData($this->data, array(
             'password'      => array(
@@ -77,21 +74,21 @@ class Slim_User
         if (!sizeof($error))
         {
             $sql_ary = array(
-                'type'              => $app->config('usergroup.new'),
-                'username'          => $data['username'],
-                'username_clean'    => strtolower($data['username']),
-                'password'          => $passwordHash->HashPassword($data['password']),
-                'email'             => strtolower($data['email']),
+                'type'              => $this->data['type'],
+                'username'          => $this->data['username'],
+                'username_clean'    => strtolower($this->data['username']),
+                'password'          => $passwordHash->HashPassword($this->data['password']),
+                'email'             => strtolower($this->data['email']),
                 'form_salt'         => uniqid(),
                 'last_visit'        => time(),          
             );
 
-            $sql = "INSERT INTO users " . $app->db->sql_build_array('INSERT', $sql_ary);
-            $app->db->sql_query($sql);
+            $sql = "INSERT INTO users " . $this->db->sql_build_array('INSERT', $sql_ary);
+            $this->db->sql_query($sql);
 
-            // Log in the user and redirect to the startpage or maybe change to user page or something later?
+            // Create a new session and log in the user
             $user_id = mysql_insert_id();
-            $app->session->sessionCreate($user_id);
+            $this->session->sessionCreate($user_id);
 
             $message['registration'] = true;
             return $message;
@@ -101,63 +98,5 @@ class Slim_User
             $message['error'] = $error;
             return $message;
         }               
-    }
-
-    /**
-     * User getters
-     */
-    public function getId() {
-        return $this->data['id'];
-    }
-
-    public function getType() {
-        return $this->data['type'];
-    }
-
-    public function getPassword() {
-        return $this->password;
-    }
-
-    public function getUsername() {
-        return $this->data['username'];
-    }
-
-    public function getUsernameClean() {
-        return strtolower($this->data['username']);
-    }
-
-    public function getEmail() {
-        return strtolower($this->data['email']);
-    }
-
-    public function getFormSalt() {
-        return $this->data['form_salt'];
-    }
-
-    /**
-     * User setters
-     */
-    public function setId($id) {
-        $this->data['id'] = $id;
-    }
-
-    public function setType($type) {
-        $this->data['type'] = $type;
-    }
-
-    public function setPassword($password) {
-        $this->data['password'] = $password;
-    }
-
-    public function setUsername($username) {
-        $this->data['username'] = $username;
-    }
-
-    public function setEmail($email) {
-        $this->data['email'] = $email;
-    }
-
-    public function setFormSalt($form_salt) {
-        $this->data['form_salt'] = $form_salt;
-    }          
+    }         
 }
