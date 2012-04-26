@@ -35,7 +35,7 @@ class Slim_Controllers_Auth
         $result = $this->db->sql_query($sql);
         $this->data = $this->db->sql_fetchrow($result);
 
-        $this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.registered'] || $this->data['user_type'] == $app->config['usergroup.admin'])) ? true : false;
+        $this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.normal'] || $this->data['user_type'] == $this->config['usergroup.admin'])) ? true : false;
 
         return $this->data;
     }

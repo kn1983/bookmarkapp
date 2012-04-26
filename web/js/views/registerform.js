@@ -13,7 +13,7 @@ define(['text!tpls/registerForm.html'], function(registerFormTpl){
 		},
 		register: function(event){
 			var registerFormData = $("#register").serialize();
-			$.post("api/user", registerFormData, function(data){
+			$.post("api/users", registerFormData, function(data){
 				console.debug(data);
 			},"json");
 			return false;

@@ -87,7 +87,6 @@ class Slim_Session
 						// Only update session if a minute has passed or if the user enters another page
 						if ($this->time - $this->data['time'] > 60) 
 						{
-
 							$sql_ary = array(
 								'time' => $this->time,
 							);
@@ -108,9 +107,9 @@ class Slim_Session
 				}
 			}
 		}
-
+		return false;
 		// If we got this far it means no cookie... and tadaah! We need to create one ;-)
-		$this->sessionCreate();
+		/*$this->sessionCreate();*/
 
 	}
 

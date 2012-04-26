@@ -16,14 +16,3 @@ $twig 	  = new Twig_Environment($loader, array('cache' => _DIR_ . 'api/cache/tem
 
 // Do the session thing
 $app->session->sessionBegin();
-
-// Make an array of all global variables
-$data = array(
-	'userLoggedIn'  => $app->session->data['logged_in'] == true ? true : false,
-	'username'		=> $app->session->data['username'],
-);
-
-// Add the array for using in templates
-$twig->addGlobal(
-	'global', $data
-);
