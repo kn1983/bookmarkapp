@@ -10,7 +10,9 @@ require (
 	function(){
 		require(['require', 'order!jquery', 'order!underscore', 'order!backbone'], function(){
 			require(['app'], function(App){
+				// console.debug(App);
 				App.initialize();
+				// console.debug(App);
 			});
 		});
 	}
