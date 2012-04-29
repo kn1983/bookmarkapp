@@ -68,11 +68,12 @@ class Slim_Controllers_Users
         $this->data['username'] = $user->username;
         $this->data['password'] = $user->password;
         $this->data['email']    = $user->email;
-        //SLUT PÅ HACKAD KOD
 
         // $this->data['username'] = $this->request->post('username');
         // $this->data['password'] = $this->request->post('password');
         // $this->data['email']    = $this->request->post('email');
+
+        //SLUT PÅ HACKAD KOD
 
         $error = $validation->validateData($this->data, array(
             'password'      => array(
