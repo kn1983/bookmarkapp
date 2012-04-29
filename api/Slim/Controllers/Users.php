@@ -47,7 +47,15 @@ class Slim_Controllers_Users
 
     public function setUser(Slim_Http_Request $request, Slim_Session $session, $config) 
     {
-        $this->request = $request;
+
+        // HACKAD KOD
+        // $this->request = $request;
+        $request = Slim::getInstance()->request();
+        $body = $request->getBody();
+        $user = json_decode($body);
+        //SLUT PÅ HACKAD KOG
+
+
         $this->session = $session;
         $this->config  = $config; 
 
@@ -55,9 +63,16 @@ class Slim_Controllers_Users
         $passwordHash = new Slim_Security_PasswordHash();
         $message = array('status' => false, 'error' => false);
 
-        $this->data['username'] = $this->request->post('username');
-        $this->data['password'] = $this->request->post('password');
-        $this->data['email']    = $this->request->post('email');
+        
+        //HACKAD KOD
+        $this->data['username'] = $user->username;
+        $this->data['password'] = $user->password;
+        $this->data['email']    = $user->email;
+        //SLUT PÅ HACKAD KOD
+
+        // $this->data['username'] = $this->request->post('username');
+        // $this->data['password'] = $this->request->post('password');
+        // $this->data['email']    = $this->request->post('email');
 
         $error = $validation->validateData($this->data, array(
             'password'      => array(
