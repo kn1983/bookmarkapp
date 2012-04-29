@@ -32,8 +32,7 @@ define([
 					console.debug(this.model);
 					this.users.create(data, {
 						success: function(){
-							console.debug(data);
-							console.debug("success");
+							alert("success");
 						}
 					});
 				} else {

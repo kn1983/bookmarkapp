@@ -1,13 +1,13 @@
 <form method="post" action="api/user" id="register">
     <fieldset>              
         <label for="username">Username: </label>
-        <input type="text" name="username" id="username" value="" />
+        <input type="text" name="username" id="username" value="" maxlength="30" />
 
         <label for="email">E-mail address: </label>
-        <input type="email" name="email" id="email" value="" /> 
+        <input type="email" name="email" id="email" value="" maxlength="60" /> 
 
         <label for="password">Password: </label>
-        <input type="password" id="password" name="password" value="" />
+        <input type="password" id="password" name="password" value="" maxlength="60" />
 
         <input class="btnGrey submitUser" type="submit" name="register" value="Register" />
     </fieldset>
