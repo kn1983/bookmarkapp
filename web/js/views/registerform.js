@@ -1,8 +1,7 @@
 define([
-	'text!tpls/registerForm.html',
-	'collections/users'
+	'text!tpls/registerForm.html'
 	], 
-	function(registerFormTpl, Users){
+	function(registerFormTpl){
 	var RegisterFormView = Backbone.View.extend({
 		tagName: "div",
 		className: "msgForm",
@@ -12,9 +11,7 @@ define([
 		},
 		render: function(){
 			var self = this;
-			this.before(function(){	
-				self.$el.html(self.template());
-			});
+			self.$el.html(self.template());
 			return this;
 		},
 		events: {
@@ -29,9 +26,9 @@ define([
 			if(this.model.set(formData)){
 				var self = this;
 				if(this.model.isNew()){
-					this.users.create(formData, {
-						success: function(data){
-							console.debug(data, self.users);
+					this.collection.create(this.model, {
+						success: function(){
+							console.debug("success");
 						}
 					});
 				} else {
@@ -46,28 +43,7 @@ define([
 			$.each(errors, function(index, error){
 				errorDiv.append('<p>' + error + '</p>');
 			});
-		},
-		before: function(callback){
-			if(this.users){
-				console.debug(this.users);
-				if(callback) callback();
-			} else {
-				var self = this;
-				this.users = new Users();
-				this.users.fetch({
-					success: function(){
-						if(callback) callback();
-					}
-				});
-			}
 		}
-		// register: function(event){
-		// 	var registerFormData = $("#register").serialize();
-		// 	$.post("api/users", registerFormData, function(data){
-		// 		console.debug(data);
-		// 	},"json");
-		// 	return false;
-		// }
 	});
 	return RegisterFormView;
 });

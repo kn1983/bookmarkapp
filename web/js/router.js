@@ -14,11 +14,10 @@ define([
 		initialize: function(){
 			var self = this;
 			this.before(function(){
-				$("#header").html(new HeaderView({loggedIn: self.userInfo.first().get("logged_in")}).render().el);
+				self.before2(function(){
+					$("#header").html(new HeaderView({loggedIn: self.userInfo.first().get("logged_in")}).render().el);
+				});
 			});
-			// this.before2(function(){
-			// 	console.debug("success");
-			// });
 		},
 		bookmarks: function(){
 			this.before(function(){
@@ -26,8 +25,11 @@ define([
 			});
 		},
 		register: function(){
+			var self = this;
 			this.before(function(){
-				$("#content").html(new RegisterFormView({model: new User()}).render().el);
+				self.before2(function(){
+					$("#content").html(new RegisterFormView({model: new User(), collection: self.users}).render().el);
+				});
 			});
 		},
 		before: function(callback){
@@ -42,20 +44,20 @@ define([
 					}
 				});
 			}
+		},
+		before2: function(callback){
+			if(this.users){
+				if(callback) callback();
+			} else {
+				var self = this;
+				this.users = new Users();
+				this.users.fetch({
+					success: function(){
+						if(callback) callback();
+					}
+				});
+			}
 		}
-		// before2: function(callback){
-		// 	if(this.users) {
-		// 		if(callback) callback();
-		// 	} else {
-		// 		this.users = new Users();
-		// 		var self = this;
-		// 		this.users.fetch({
-		// 			success: function(){
-		// 				// console.debug(self.users);
-		// 			}
-		// 		})
-		// 	}
-		// }
 	});
 	return AppRouter;
 });
