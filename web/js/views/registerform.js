@@ -21,18 +21,17 @@ define([
 			"click .submitUser": "register"
 		},
 		register: function(eventName){
-			var data = {
+			var formData = {
 				username: $("#register #username").val(),
 				email: $("#register #email").val(),
 				password: $("#register #password").val()
 			};
-			if(this.model.set(data)){
+			if(this.model.set(formData)){
 				var self = this;
 				if(this.model.isNew()){
-					console.debug(this.model);
-					this.users.create(data, {
-						success: function(){
-							alert("success");
+					this.users.create(formData, {
+						success: function(data){
+							console.debug(data, self.users);
 						}
 					});
 				} else {
