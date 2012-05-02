@@ -4,6 +4,7 @@ require 'common.php';
 
 // Get requested page
 $mode = $app->request()->params('mode');
+$session = Slim::getInstance()->session();
 
 // Check which action we are dealing with
 switch ($mode)
@@ -11,8 +12,8 @@ switch ($mode)
 	// User is logging out
 	case 'logout':
 
-		$app->session->sessionKill();
-		$app->session->sessionBegin();
+		$session->sessionKill();
+		$session->sessionBegin();
 		header('Location: index');
 
 	break;

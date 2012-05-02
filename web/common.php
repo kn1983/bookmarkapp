@@ -13,6 +13,7 @@ $loader   = new Twig_Loader_Filesystem(_DIR_ . 'web/views');
 // Init some global classes
 $app 	  = new Slim();
 $twig 	  = new Twig_Environment($loader, array('cache' => _DIR_ . 'api/cache/templates', 'auto_reload' => true,));
+$session  = Slim::getInstance()->session();
 
 // Do the session thing
-$app->session->sessionBegin();
+$session->sessionBegin();

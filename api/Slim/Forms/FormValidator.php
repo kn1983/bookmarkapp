@@ -42,15 +42,15 @@ class Slim_Forms_FormValidator
 	*/
 	private function validate_userexist($username)
 	{
-		global $app;
+		$db = Slim::getInstance()->db();
 
 		$username = strtolower($username);
 		
 		$sql = "SELECT username 
 				FROM users 
 				WHERE username_clean = '{$username}'";
-		$result = $app->db->sql_query($sql);
-		$row = $app->db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrow($result);
 		
 		// Check if the user exist 
 		if (!$row['username']) 
@@ -176,7 +176,7 @@ class Slim_Forms_FormValidator
 	*/
 	private function validate_username($username)
 	{
-		global $app;
+		$db = Slim::getInstance()->db();
 
 		if ($username == '')
 		{
@@ -193,8 +193,8 @@ class Slim_Forms_FormValidator
 		$sql = "SELECT username
 				FROM users
 				WHERE username_clean = '{$clean_username}'";		
-		$result = $app->db->sql_query($sql);
-		$row = $app->db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrow($result);
 
 		if ($row)
 		{
@@ -230,7 +230,7 @@ class Slim_Forms_FormValidator
 	*/
 	private function validate_email($email)
 	{
-		global $app;
+		$db = Slim::getInstance()->db();
 
 		if ($email == '')
 		{
@@ -247,8 +247,8 @@ class Slim_Forms_FormValidator
 		$sql = "SELECT email
 				FROM users
 				WHERE email = '{$email}'";		
-		$result = $app->db->sql_query($sql);
-		$row = $app->db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrow($result);
 
 		if ($row)
 		{

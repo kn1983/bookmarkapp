@@ -15,8 +15,8 @@ class Slim_Controllers_Users
 
     protected $config;
 
-    public function __construct(Slim_Database_Dbal $db) {
-        $this->db = $db;
+    public function __construct() {
+         $this->db = Slim::getInstance()->db();
     }
 
     public function getUser() 

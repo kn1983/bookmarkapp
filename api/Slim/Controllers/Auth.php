@@ -12,9 +12,9 @@ class Slim_Controllers_Auth
 
     protected $session;
 
-    public function __construct(Slim_Database_Dbal $db) 
+    public function __construct() 
     {
-        $this->db = $db;
+        $this->db = Slim::getInstance()->db();
     }
 
     public function getAuth(Slim_Http_Request $request, $config)

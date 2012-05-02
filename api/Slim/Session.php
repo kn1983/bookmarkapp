@@ -15,12 +15,14 @@ class Slim_Session
 	public $ip;
 	public $page_url;
 
-	public function __construct(Slim_Http_Request $request, Slim_Http_Response $response, $settings)
+
+	public function __construct(Slim_Http_Request $request, Slim_Http_Response $response, Slim_Database_Dbal $db, $settings)
 	{
 
         $this->request = $request;
         $this->response = $response;
-        $this->config = $settings;		
+        $this->config = $settings;
+        $this->db = $db;	
 
 		$this->time 		= time();
 		$this->browser		= $this->request->getUserAgent();
@@ -54,8 +56,8 @@ class Slim_Session
 					ON u.id = s.user_id
 					WHERE s.sid = '{$this->session_id}'
 					LIMIT 1";
-			$result = $app->db->sql_query($sql);
-			$this->data = $app->db->sql_fetchrow($result);
+			$result = $this->db->sql_query($sql);
+			$this->data = $this->db->sql_fetchrow($result);
 
 			// Did the user exist?
 			if (isset($this->data['user_id']))
@@ -91,9 +93,9 @@ class Slim_Session
 								'time' => $this->time,
 							);
 
-							$sql = "UPDATE sessions SET " . $app->db->sql_build_array('UPDATE', $sql_ary) . "
+							$sql = "UPDATE sessions SET " . $this->db->sql_build_array('UPDATE', $sql_ary) . "
 									WHERE sid = '{$this->session_id}'";
-							$app->db->sql_query($sql);
+							$this->db->sql_query($sql);
 						}
 
 						$this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.normal'] || $this->data['user_type'] == $this->config['usergroup.admin'])) ? true : false;					
@@ -102,7 +104,7 @@ class Slim_Session
 
 					$sql = "DELETE FROM sessions
 							WHERE sid = '{$this->session_id}'";
-					$app->db->sql_query($sql);
+					$this->db->sql_query($sql);
 				
 				}
 			}
@@ -137,8 +139,8 @@ class Slim_Session
 					WHERE u.id = '{$this->cookie_id}'
 					AND u.type IN (" . $this->config['usergroup.new'] . ", " . $this->config['usergroup.normal'] . ", " . $this->config['usergroup.admin'] . ")
 					AND k.key_id = '{$cookie_key}'";
-			$result = $app->db->sql_query($sql);
-			$this->data = $app->db->sql_fetchrow($result);
+			$result = $this->db->sql_query($sql);
+			$this->data = $this->db->sql_fetchrow($result);
 
 		} 
 		else if ($user_id !== false && !sizeof($this->data)) 
@@ -151,8 +153,8 @@ class Slim_Session
 					FROM users AS u
 					WHERE id = '{$this->cookie_id}'
 					AND type IN (" . $this->config['usergroup.new'] . ", " . $this->config['usergroup.normal'] . ", " . $this->config['usergroup.admin'] . ")";
-			$result = $app->db->sql_query($sql);
-			$this->data = $app->db->sql_fetchrow($result);
+			$result = $this->db->sql_query($sql);
+			$this->data = $this->db->sql_fetchrow($result);
 		}
 
 		// If no data was returned it means no key was returned or that the user did not exist in the db
@@ -165,8 +167,8 @@ class Slim_Session
 					FROM users AS u
 					WHERE id = '{$this->cookie_id}'";
 
-			$result = $app->db->sql_query($sql);
-			$this->data = $app->db->sql_fetchrow($result);
+			$result = $this->db->sql_query($sql);
+			$this->data = $this->db->sql_fetchrow($result);
 		}
 
 		$this->data['last_visit'] = $this->time;
@@ -186,14 +188,14 @@ class Slim_Session
 		$sql = "DELETE FROM sessions
 				WHERE sid = '{$this->session_id}'
 				AND user_id = " . $this->config['user.guest'];
-		$app->db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		$this->session_id = $this->data['sid'] = md5(uniqid());
 
 		$sql_ary['sid'] = (string) $this->session_id;
 
-		$sql = "INSERT INTO sessions " . $app->db->sql_build_array('INSERT', $sql_ary);
-		$app->db->sql_query($sql);
+		$sql = "INSERT INTO sessions " . $this->db->sql_build_array('INSERT', $sql_ary);
+		$this->db->sql_query($sql);
 
 		if ($session_autologin) 
 		{
@@ -211,8 +213,8 @@ class Slim_Session
 				FROM sessions
 				WHERE user_id = '{$this->data['user_id']}'
 				AND time >= " . (int) ($this->time - $this->config['cookies.lifetime']);
-		$result = $app->db->sql_query($sql);
-		$row = $app->db->sql_fetchrow($result);
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
 
 		if ($row['sessions'] <= 1 || empty($this->data['form_salt'])) 
 		{
@@ -222,7 +224,7 @@ class Slim_Session
 			$sql = "UPDATE users
 					SET form_salt = '{$this->data['form_salt']}'
 					WHERE id = '{$this->data['user_id']}'";
-			$app->db->sql_query($sql);
+			$this->db->sql_query($sql);
 		}
 	}
 
@@ -237,7 +239,7 @@ class Slim_Session
 		$sql = "DELETE FROM sessions
 				WHERE sid = '{$this->session_id}'
 				AND user_id = '{$this->data['user_id']}'";
-		$app->db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		if ($this->data['user_id'] != $this->config['user.guest']) {
 
@@ -254,7 +256,7 @@ class Slim_Session
 				$sql = "DELETE FROM session_keys
 						WHERE user_id = '{$this->data['user_id']}'
 						AND key_id = '{$cookie_key}'";
-				$app->db->sql_query($sql);
+				$this->db->sql_query($sql);
 			}
 
 			// Reset the data array
@@ -263,8 +265,8 @@ class Slim_Session
 			$sql = "SELECT *
 					FROM users
 					WHERE id = " . $this->config['user.guest'];
-			$result = $app->db->sql_query($sql);
-			$this->data = $app->db->sql_fetchrow($result);
+			$result = $this->db->sql_query($sql);
+			$this->data = $this->db->sql_fetchrow($result);
 		}
 
 		$this->setNewCookie('u', '');
@@ -303,16 +305,16 @@ class Slim_Session
 			$key = md5($this->cookie_key);
 
 			$sql = "UPDATE session_keys
-					SET " . $app->db->sql_build_array('UPDATE', $sql_ary) . "
+					SET " . $this->db->sql_build_array('UPDATE', $sql_ary) . "
 					WHERE user_id = '{$this->data['user_id']}'
 					AND key_id = '{$key}'";
 		} 
 		else 
 		{
-			$sql = "INSERT INTO session_keys " . $app->db->sql_build_array('INSERT', $sql_ary);
+			$sql = "INSERT INTO session_keys " . $this->db->sql_build_array('INSERT', $sql_ary);
 		}
 
-		$app->db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		$this->cookie_key = $key_id;
 

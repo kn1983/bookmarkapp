@@ -115,6 +115,16 @@ class Slim {
     /**
      * @var array
      */
+    protected $session;
+
+    /**
+     * @var array
+     */
+    protected $db;
+
+    /**
+     * @var array
+     */
     protected $hooks = array(
         'slim.before' => array(array()),
         'slim.before.router' => array(array()),
@@ -161,7 +171,7 @@ class Slim {
         $this->add(new Slim_Middleware_Flash());
         $this->add(new Slim_Middleware_MethodOverride());
         $this->db = new Slim_Database_Dbal($this->settings);
-        $this->session = new Slim_Session($this->request, $this->response, $this->settings);
+        $this->session = new Slim_Session($this->request, $this->response, $this->db, $this->settings);
 
         //Determine application mode
         $this->getMode();
@@ -236,7 +246,7 @@ class Slim {
             'db.port' => '',
             'db.name' => 'page',
             'db.user' => 'root',
-            'db.pw'   => 'root',
+            'db.pw'   => '',
             //View
             'templates.path' => './templates',
             'view' => 'Slim_View',
@@ -578,6 +588,30 @@ class Slim {
     public function router() {
         return $this->router;
     }
+
+    /**
+     * Get the Session object
+     * @return Slim_Session
+     */
+    public function session() {
+        return $this->session;
+    }
+
+    /**
+     * Get the Database object
+     * @return Slim_Database_Dbal
+     */
+    public function db() {
+        return $this->db;
+    }
+
+    /**
+     * Get the Settings object
+     * @return Slim_Database_Dbal
+     */
+    public function settings() {
+        return $this->settings;
+    }           
 
     /**
      * Get and/or set the View
