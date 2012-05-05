@@ -14,13 +14,13 @@ class Slim_Security_PasswordHash
 
 	public function __construct()
 	{
-		global $app;
+		$request = Slim::getInstance()->request();
 		
 		$this->itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 		$this->iteration_count_log2 = 8;
 
 		$this->random_state = microtime();
-		$this->random_state .= $app->request()->getIp();
+		$this->random_state .= $request->getIp();
 	}
 
 	/**

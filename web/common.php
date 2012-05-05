@@ -3,6 +3,7 @@
 define('_DIR_', '../');
 
 // Include some common classes
+require _DIR_ . 'api/Config/config.php';
 require _DIR_ . 'api/Slim/Slim.php';
 require _DIR_ . 'api/Vendor/Twig/Autoloader.php';
 
