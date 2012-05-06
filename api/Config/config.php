@@ -7,8 +7,8 @@ define('MODE', 'development');
 define('DEBUG', true);
 
 //Logging
-define('LOG_WRITER', true);
-define('LOG_LEVEL', true);
+define('LOG_WRITER', null);
+define('LOG_LEVEL', 4);
 define('LOG_ENABLED', true);
 
 //Database
