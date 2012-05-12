@@ -1,21 +1,25 @@
 define([
 	'models/user',
+	'models/bookmark',
 	'views/header',
-	'views/registerForm', 
+	'views/registerform',
+	'views/bookmarkdialog', 
 	'collections/userInfo',
-	'collections/users'
-	], function(User, HeaderView, RegisterFormView, UserInfo, Users){
+	'collections/users',
+	'collections/bookmarks'
+	], function(User, Bookmark, HeaderView, RegisterFormView, BookmarkDialogView, UserInfo, Users, Bookmarks){
 	var AppRouter = Backbone.Router.extend({
 		routes: {
 			"": "content",
 			"!/bookmarks": "bookmarks",
-			"!/register": "register"
+			"!/register": "register",
+			"!/addbookmark": "addBookmark"
 		},
 		initialize: function(){
 			var self = this;
 			this.before(function(){
 				self.before2(function(){
-					$("#header").html(new HeaderView({loggedIn: self.userInfo.first().get("logged_in")}).render().el);
+					$("#header").html(new HeaderView({loggedIn: self.loggedIn}).render().el);
 				});
 			});
 		},
@@ -28,18 +32,33 @@ define([
 			var self = this;
 			this.before(function(){
 				self.before2(function(){
+					$("#content").empty();
 					$("#content").html(new RegisterFormView({model: new User(), collection: self.users}).render().el);
 				});
 			});
 		},
+		addBookmark: function(){
+			var self = this;
+			this.before(function(){
+				self.before2(function(){
+					if(self.loggedIn){
+						if(self.bookmarks){
+							self.bookmarks = new Bookmarks();
+						}
+						$("body").append(new BookmarkDialogView({model: new Bookmark(), collection: self.bookmarks}).render().el);
+					}
+				});
+			});
+		},
 		before: function(callback){
-			$("#content").empty();
+			var self = this;
 			if(this.userInfo){
 				if(callback) callback();
 			} else {
 				this.userInfo = new UserInfo();
 				this.userInfo.fetch({
 					success: function(){
+						self.loggedIn = self.userInfo.first().get("logged_in");
 						if(callback) callback();
 					}
 				});

@@ -8,6 +8,7 @@ define([
 		loggedInItems: [
 			{name: "Bookmarks", url: "#!/bookmarks"},
 			{name: "My bookmarks", url: "#!/mybookmarks"},
+			{name: "Add bookmark", url: "#!/addbookmark"},
 			{name: "Logout", url: "logout"}
 		],
 		loggedOutItems: [

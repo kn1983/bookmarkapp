@@ -23,7 +23,6 @@ define(function(){
 				errorMessages.push("This is not a valid e-mail!");
 			}
 
-
 			// Return errors
 			if(errorMessages.length > 0){
 				return errorMessages;
