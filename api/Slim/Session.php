@@ -16,12 +16,10 @@ class Slim_Session
 	public $page_url;
 
 
-	public function __construct(Slim_Http_Request $request, Slim_Http_Response $response, Slim_Database_Dbal $db, $settings)
+	public function __construct(Slim_Http_Request $request, Slim_Http_Response $response, Slim_Database_Dbal $db)
 	{
-
         $this->request = $request;
         $this->response = $response;
-        $this->config = $settings;
         $this->db = $db;	
 
 		$this->time 		= time();
@@ -30,10 +28,10 @@ class Slim_Session
 		$this->server_name 	= $this->request->getHost();
 
 		// Check if we have a cookie set
-		if ($request->cookies($this->config['cookies.name'] . '_sid') || $request->cookies($this->config['cookies.name'] . '_u')) {
-			$this->cookie_id 	= (int) $request->cookies($this->config['cookies.name'] . '_u');
-			$this->cookie_key 	= $request->cookies($this->config['cookies.name'] . '_k');
-			$this->session_id 	= $request->cookies($this->config['cookies.name'] . '_sid');
+		if ($request->cookies(COOKIE_NAME . '_sid') || $request->cookies(COOKIE_NAME . '_u')) {
+			$this->cookie_id 	= (int) $request->cookies(COOKIE_NAME . '_u');
+			$this->cookie_key 	= $request->cookies(COOKIE_NAME . '_k');
+			$this->session_id 	= $request->cookies(COOKIE_NAME . '_sid');
 		}
 	}
 
@@ -46,7 +44,6 @@ class Slim_Session
 	*/
 	public function sessionBegin()
 	{
-		global $app;
 
 		if (isset($this->session_id) && isset($this->cookie_id))
 		{
@@ -78,7 +75,7 @@ class Slim_Session
 					// Check if the session is still valid
 					if (!$this->data['autologin']) 
 					{
-						if ($this->data['time'] < $this->time - $this->config['cookies.lifetime']) 
+						if ($this->data['time'] < $this->time - COOKIE_LIFETIME) 
 						{
 							$session_expired = true;
 						}
@@ -86,7 +83,7 @@ class Slim_Session
 
 					// We continue if the session did not expire or if we are dealing with an autologin
 					if ($session_expired == false) {
-						// Only update session if a minute has passed or if the user enters another page
+						// Only update session if a minute has passed
 						if ($this->time - $this->data['time'] > 60) 
 						{
 							$sql_ary = array(
@@ -98,21 +95,18 @@ class Slim_Session
 							$this->db->sql_query($sql);
 						}
 
-						$this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.normal'] || $this->data['user_type'] == $this->config['usergroup.admin'])) ? true : false;					
+						$this->data['logged_in'] = ($this->data['type'] == USER_NEW || $this->data['type'] == USER_NORMAL || $this->data['type'] == USER_ADMIN) ? true : false;					
 						return true;
 					}
 
+					// If the session lifetime has expired we delete it
 					$sql = "DELETE FROM sessions
 							WHERE sid = '{$this->session_id}'";
-					$this->db->sql_query($sql);
-				
+					$this->db->sql_query($sql);				
 				}
 			}
 		}
 		return false;
-		// If we got this far it means no cookie... and tadaah! We need to create one ;-)
-		/*$this->sessionCreate();*/
-
 	}
 
 	/**
@@ -123,8 +117,6 @@ class Slim_Session
 	*/
 	public function sessionCreate($user_id = false, $autologin = false)
 	{
-		global $app;
-
 		$this->data = array();
 
 		// If we're presented with an autologin key we'll join against it. Else if we've been passed a user_id we'll grab data based on that
@@ -137,42 +129,26 @@ class Slim_Session
 					LEFT JOIN session_keys AS k
 					ON k.user_id = u.id
 					WHERE u.id = '{$this->cookie_id}'
-					AND u.type IN (" . $this->config['usergroup.new'] . ", " . $this->config['usergroup.normal'] . ", " . $this->config['usergroup.admin'] . ")
+					AND u.type IN (" . USER_NEW . ", " . USER_NORMAL . ", " . USER_ADMIN . ")
 					AND k.key_id = '{$cookie_key}'";
 			$result = $this->db->sql_query($sql);
 			$this->data = $this->db->sql_fetchrow($result);
 
-		} 
-		else if ($user_id !== false && !sizeof($this->data)) 
-		{
+		} else if ($user_id !== false && !sizeof($this->data)) {
 			
 			$this->cookie_key = '';
 			$this->cookie_id = $user_id;
 
 			$sql = "SELECT u.*, u.id AS user_id
 					FROM users AS u
-					WHERE id = '{$this->cookie_id}'
-					AND type IN (" . $this->config['usergroup.new'] . ", " . $this->config['usergroup.normal'] . ", " . $this->config['usergroup.admin'] . ")";
-			$result = $this->db->sql_query($sql);
-			$this->data = $this->db->sql_fetchrow($result);
-		}
-
-		// If no data was returned it means no key was returned or that the user did not exist in the db
-		if (!sizeof($this->data) || !is_array($this->data)) 
-		{
-			$this->cookie_key = '';
-			$this->cookie_id = $this->config['user.guest'];
-
-			$sql = "SELECT u.*, u.id AS user_id 
-					FROM users AS u
-					WHERE id = '{$this->cookie_id}'";
-
+					WHERE u.id = '{$this->cookie_id}'
+					AND u.type IN (" . USER_NEW . ", " . USER_NORMAL . ", " . USER_ADMIN . ")";
 			$result = $this->db->sql_query($sql);
 			$this->data = $this->db->sql_fetchrow($result);
 		}
 
 		$this->data['last_visit'] = $this->time;
-		$this->data['logged_in'] = ($this->data['id'] != $this->config['user.guest'] && ($this->data['type'] == $this->config['usergroup.new'] || $this->data['type'] == $this->config['usergroup.normal'] || $this->data['user_type'] == $this->config['usergroup.admin'])) ? true : false;
+		$this->data['logged_in'] = ($this->data['type'] == USER_NEW || $this->data['type'] == USER_NORMAL || $this->data['user_type'] == USER_ADMIN) ? true : false;
 
 		$session_autologin = (($this->cookie_key || $autologin) && $this->data['logged_in']) ? true : false;
 
@@ -184,11 +160,6 @@ class Slim_Session
 			'ip'			=> $this->ip,
 			'autologin'		=> ($session_autologin) ? 1 : 0,
 		);
-
-		$sql = "DELETE FROM sessions
-				WHERE sid = '{$this->session_id}'
-				AND user_id = " . $this->config['user.guest'];
-		$this->db->sql_query($sql);
 
 		$this->session_id = $this->data['sid'] = md5(uniqid());
 
@@ -212,13 +183,12 @@ class Slim_Session
 		$sql = "SELECT COUNT(sid) AS sessions
 				FROM sessions
 				WHERE user_id = '{$this->data['user_id']}'
-				AND time >= " . (int) ($this->time - $this->config['cookies.lifetime']);
+				AND time >= " . (int) ($this->time - COOKIE_LIFETIME);
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 
 		if ($row['sessions'] <= 1 || empty($this->data['form_salt'])) 
 		{
-
 			$this->data['form_salt'] = uniqid();
 
 			$sql = "UPDATE users
@@ -234,56 +204,34 @@ class Slim_Session
 	*/
 	public function sessionKill()
 	{
-		global $app;
-
 		$sql = "DELETE FROM sessions
 				WHERE sid = '{$this->session_id}'
 				AND user_id = '{$this->data['user_id']}'";
 		$this->db->sql_query($sql);
 
-		if ($this->data['user_id'] != $this->config['user.guest']) {
+		if ($this->cookie_key) {
+			$cookie_key = md5($this->cookie_key);
 
-			// Delete existing session, update last visit info first!
-			if (!isset($this->data['time'])) 
-			{
-				$this->data['time'] = $this->time;
-			}
-
-			if ($this->cookie_key) 
-			{
-				$cookie_key = md5($this->cookie_key);
-
-				$sql = "DELETE FROM session_keys
-						WHERE user_id = '{$this->data['user_id']}'
-						AND key_id = '{$cookie_key}'";
-				$this->db->sql_query($sql);
-			}
-
-			// Reset the data array
-			$this->data = array();
-
-			$sql = "SELECT *
-					FROM users
-					WHERE id = " . $this->config['user.guest'];
-			$result = $this->db->sql_query($sql);
-			$this->data = $this->db->sql_fetchrow($result);
+			$sql = "DELETE FROM session_keys
+					WHERE user_id = '{$this->data['user_id']}'
+					AND key_id = '{$cookie_key}'";
+			$this->db->sql_query($sql);
 		}
 
+		// Reset some values
+		$this->data = array();
+		$this->session_id = '';
 		$this->setNewCookie('u', '');
 		$this->setNewCookie('k', '');
 		$this->setNewCookie('sid', '');
-
-		$this->session_id = '';
 	}
 
 	/**
 	* Sets a login key
-	* Used when a user is logging in with a pesistent login alias autologin
+	* Used when a user is logging in with autologin
 	*/
 	private function setLoginKey()
 	{
-		global $app;
-
 		$key_id = uniqid(hexdec(substr($this->session_id, 0, 8)));
 
 		$sql_ary = array(
@@ -293,24 +241,20 @@ class Slim_Session
 			'time'		=> $this->time
 		);
 
-		if (!$this->cookie_key) 
-		{
+		if (!$this->cookie_key) {
 			$sql_ary += array(
 				'user_id'	=> $this->data['user_id']
 			);
 		}
 
-		if ($this->cookie_key) 
-		{
+		if ($this->cookie_key) {
 			$key = md5($this->cookie_key);
 
 			$sql = "UPDATE session_keys
 					SET " . $this->db->sql_build_array('UPDATE', $sql_ary) . "
 					WHERE user_id = '{$this->data['user_id']}'
 					AND key_id = '{$key}'";
-		} 
-		else 
-		{
+		} else {
 			$sql = "INSERT INTO session_keys " . $this->db->sql_build_array('INSERT', $sql_ary);
 		}
 
@@ -327,7 +271,7 @@ class Slim_Session
 	*/	
 	private function setNewCookie($name, $cookie_data)
 	{
-		$name = $this->config['cookies.name'] . '_' . $name;
+		$name = COOKIE_NAME . '_' . $name;
 		$expires = $this->time + 31536000;		
 		$domain = $this->server_name;
 

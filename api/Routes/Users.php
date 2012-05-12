@@ -16,16 +16,13 @@ function getUser($id, $return = false)
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result);
 
-    if (!$return) {
-    	echo json_encode($data);
-    } else {
-    	return $data;
-    }
+    echo json_encode($data);
 }
 
 function getUsers() 
 {
 	$db = Slim::getInstance()->db();
+    $data = array();
 
     $sql = "SELECT id, username FROM users";
     $result = $db->sql_query($sql);
@@ -39,7 +36,6 @@ function getUsers()
 function setUser() 
 {
 	$db = Slim::getInstance()->db();
-    $settings = Slim::getInstance()->settings();
     $session = Slim::getInstance()->session();
     $request = Slim::getInstance()->request();
     $body = $request->getBody();
@@ -49,9 +45,11 @@ function setUser()
     $passwordHash = new Slim_Security_PasswordHash();
     $message = array('status' => false, 'error' => false);
 
-    $data['username'] = $user->username;
-    $data['password'] = $user->password;
-    $data['email']    = $user->email;
+    $data = array(
+        'username'  => $user->username,
+        'password'  => $user->password,
+        'email'     => $user->email,
+    );
 
     $error = $validation->validateData($data, array(
         'password'      => array(
@@ -67,7 +65,7 @@ function setUser()
 
     if (!sizeof($error)) {
         $sql_ary = array(
-            'type'              => $settings['usergroup.new'],
+            'type'              => USER_NEW,
             'username'          => $data['username'],
             'username_clean'    => strtolower($data['username']),
             'password'          => $passwordHash->HashPassword($data['password']),
@@ -81,9 +79,7 @@ function setUser()
 
         $data['id'] = mysql_insert_id();
         $session->sessionCreate($data['id']);
-        $userData = getUser($data['id'], true);
-
-        echo json_encode($userData);
+        getUser($data['id']);
 
     } else {
         $message['error'] = $error;

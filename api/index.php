@@ -1,5 +1,6 @@
 <?php
 
+require 'Config/config.php';
 require 'Slim/Slim.php';
 
 $app = new Slim();

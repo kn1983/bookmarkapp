@@ -98,11 +98,6 @@ class Slim {
     protected $view;
 
     /**
-     * @var array
-     */
-    protected $settings;
-
-    /**
      * @var string
      */
     protected $mode;
@@ -157,27 +152,24 @@ class Slim {
 
     /**
      * Constructor
-     * @param   array   $userSettings   Key-Value array of application settings
-     * @return  void
      */
-    public function __construct( $userSettings = array() ) {
+    public function __construct() {
         //Setup Slim application
         $this->environment = Slim_Environment::getInstance();
         $this->request = new Slim_Http_Request($this->environment);
         $this->response = new Slim_Http_Response();
         $this->router = new Slim_Router($this->request, $this->response);
-        $this->settings = array_merge(self::getDefaultSettings(), $userSettings);
         $this->middleware = array($this);       
         $this->add(new Slim_Middleware_Flash());
         $this->add(new Slim_Middleware_MethodOverride());
-        $this->db = new Slim_Database_Dbal($this->settings);
-        $this->session = new Slim_Session($this->request, $this->response, $this->db, $this->settings);
+        $this->db = new Slim_Database_Dbal();
+        $this->session = new Slim_Session($this->request, $this->response, $this->db);
 
         //Determine application mode
         $this->getMode();
 
         //Setup view
-        $this->view($this->config('view'));
+        $this->view(VIEW);
 
         //Make default if first instance
         if ( is_null(self::getInstance()) ) {
@@ -185,13 +177,13 @@ class Slim {
         }
 
         //Set default logger that writes to stderr (may be overridden with middleware)
-        $logWriter = $this->config('log.writer');
+        $logWriter = LOG_WRITER;
         if ( !$logWriter ) {
             $logWriter = new Slim_LogFileWriter($this->environment['slim.errors']);
         }
         $log = new Slim_Log($logWriter);
-        $log->setEnabled($this->config('log.enabled'));
-        $log->setLevel($this->config('log.level'));
+        $log->setEnabled(LOG_ENABLED);
+        $log->setLevel(LOG_LEVEL);
         $this->environment['slim.log'] = $log;
 
         //Set global error handler
@@ -225,85 +217,6 @@ class Slim {
         return $this->name;
     }
 
-    /***** SETTINGS *****/
-
-    /**
-     * Get default application settings
-     * @return array
-     */
-    public static function getDefaultSettings() {
-        return array(
-            //Mode
-            'mode' => 'development',
-            //Debugging
-            'debug' => true,
-            //Logging
-            'log.writer' => null,
-            'log.level' => 4,
-            'log.enabled' => true,
-            //Database
-            'db.host' => 'localhost',
-            'db.port' => '',
-            'db.name' => 'page',
-            'db.user' => 'root',
-            'db.pw'   => 'root',
-            //View
-            'templates.path' => './templates',
-            'view' => 'Slim_View',
-            //Cookies
-            'cookies.name' => 'page_kl7dk',
-            'cookies.lifetime' => '20 minutes',
-            'cookies.path' => '/',
-            'cookies.domain' => null,
-            'cookies.secure' => false,
-            'cookies.httponly' => false,
-            //Encryption
-            'cookies.secret_key' => 'CHANGE_ME',
-            'cookies.cipher' => MCRYPT_RIJNDAEL_256,
-            'cookies.cipher_mode' => MCRYPT_MODE_CBC,
-            //HTTP
-            'http.version' => '1.1',
-            //User group types
-            'usergroup.admin' => 1,
-            'usergroup.new' => 2,
-            'usergroup.normal' => 3,
-            'usergroup.guest' => 4,
-            //Identifier for a guest user
-            'user.guest' => 1,
-        );
-    }
-
-    /**
-     * Configure Slim Settings
-     *
-     * This method defines application settings and acts as a setter and a getter.
-     *
-     * If only one argument is specified and that argument is a string, the value
-     * of the setting identified by the first argument will be returned, or NULL if
-     * that setting does not exist.
-     *
-     * If only one argument is specified and that argument is an associative array,
-     * the array will be merged into the existing application settings.
-     *
-     * If two arguments are provided, the first argument is the name of the setting
-     * to be created or updated, and the second argument is the setting value.
-     *
-     * @param   string|array    $name   If a string, the name of the setting to set or retrieve. Else an associated array of setting names and values
-     * @param   mixed           $value  If name is a string, the value of the setting identified by $name
-     * @return  mixed           The value of a setting if only one argument is a string
-     */
-    public function config( $name, $value = null ) {
-        if ( func_num_args() === 1 ) {
-            if ( is_array($name) ) {
-                $this->settings = array_merge($this->settings, $name);
-            } else {
-                return isset($this->settings[$name]) ? $this->settings[$name] : null;
-            }
-        } else {
-            $this->settings[$name] = $value;
-        }
-    }
-
     /***** MODES *****/
 
     /**
@@ -324,7 +237,7 @@ class Slim {
                 if ( $envMode !== false ) {
                     $this->mode = $envMode;
                 } else {
-                    $this->mode = $this->config('mode');
+                    $this->mode = MODE;
                 }
             }
         }
@@ -603,15 +516,7 @@ class Slim {
      */
     public function db() {
         return $this->db;
-    }
-
-    /**
-     * Get the Settings object
-     * @return Slim_Database_Dbal
-     */
-    public function settings() {
-        return $this->settings;
-    }           
+    }        
 
     /**
      * Get and/or set the View
@@ -637,7 +542,7 @@ class Slim {
                 $this->view = new $viewClass();
             }
             $this->view->appendData($existingData);
-            $this->view->setTemplatesDirectory($this->config('templates.path'));
+            $this->view->setTemplatesDirectory(TEMPLATE_PATH);
         }
         return $this->view;
     }
@@ -661,7 +566,7 @@ class Slim {
         if ( !is_null($status) ) {
             $this->response->status($status);
         }
-        $this->view->setTemplatesDirectory($this->config('templates.path'));
+        $this->view->setTemplatesDirectory(TEMPLATE_PATH);
         $this->view->appendData($data);
         $this->view->display($template);
     }
@@ -767,12 +672,12 @@ class Slim {
      */
     public function setCookie( $name, $value, $time = null, $path = null, $domain = null, $secure = null, $httponly = null ) {
         $this->response->setCookie($name, array(
-            'value' => $value,
-            'expires' => is_null($time) ? $this->config('cookies.lifetime') : $time,
-            'path' => is_null($path) ? $this->config('cookies.path') : $path,
-            'domain' => is_null($domain) ? $this->config('cookies.domain') : $domain,
-            'secure' => is_null($secure) ? $this->config('cookies.secure') : $secure,
-            'httponly' => is_null($httponly) ? $this->config('cookies.httponly') : $httponly
+            'value'     => $value,
+            'expires'   => is_null($time) ? COOKIE_LIFETIME : $time,
+            'path'      => is_null($path) ? COOKIE_PATH : $path,
+            'domain'    => is_null($domain) ? COOKIE_DOMAIN : $domain,
+            'secure'    => is_null($secure) ? COOKIE_SECURE : $secure,
+            'httponly'  => is_null($httponly) ? COOKIE_HTTP_ONLY : $httponly
         ));
     }
 
@@ -806,17 +711,11 @@ class Slim {
      * @return  void
      */
     public function setEncryptedCookie( $name, $value, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null ) {
-        $expires = is_null($expires) ? $this->config('cookies.lifetime') : $expires;
+        $expires = is_null($expires) ? COOKIE_LIFETIME : $expires;
         if ( is_string($expires) ) {
             $expires = strtotime($expires);
         }
-        $secureValue = Slim_Http_Util::encodeSecureCookie(
-            $value,
-            $expires,
-            $this->config('cookies.secret_key'),
-            $this->config('cookies.cipher'),
-            $this->config('cookies.cipher_mode')
-        );
+        $secureValue = Slim_Http_Util::encodeSecureCookie($value, $expires, COOKIE_SECRET_KEY, COOKIE_CIPHER, COOKIE_CIPHER_MODE);
         $this->setCookie($name, $secureValue, $expires, $path, $domain, $secure, $httponly);
     }
 
@@ -831,12 +730,7 @@ class Slim {
      * @return  string|false
      */
     public function getEncryptedCookie( $name, $deleteIfInvalid = true ) {
-        $value = Slim_Http_Util::decodeSecureCookie(
-            $this->request->cookies($name),
-            $this->config('cookies.secret_key'),
-            $this->config('cookies.cipher'),
-            $this->config('cookies.cipher_mode')
-        );
+        $value = Slim_Http_Util::decodeSecureCookie($this->request->cookies($name), COOKIE_SECRET_KEY, COOKIE_CIPHER, COOKIE_CIPHER_MODE);
         if ( $value === false && $deleteIfInvalid ) {
             $this->deleteCookie($name);
         }
@@ -862,10 +756,10 @@ class Slim {
      */
     public function deleteCookie( $name, $path = null, $domain = null, $secure = null, $httponly = null ) {
         $this->response->deleteCookie($name, array(
-            'domain' => is_null($domain) ? $this->config('cookies.domain') : $domain,
-            'path' => is_null($path) ? $this->config('cookies.path') : $path,
-            'secure' => is_null($secure) ? $this->config('cookies.secure') : $secure,
-            'httponly' => is_null($httponly) ? $this->config('cookies.httponly') : $httponly
+            'domain'    => is_null($domain) ? COOKIE_DOMAIN : $domain,
+            'path'      => is_null($path) ? COOKIE_PATH : $path,
+            'secure'    => is_null($secure) ? COOKIE_SECURE : $secure,
+            'httponly'  => is_null($httponly) ? COOKIE_HTTP_ONLY : $httponly
         ));
     }
 
@@ -1155,7 +1049,7 @@ class Slim {
             if ( strpos(PHP_SAPI, 'cgi') === 0 ) {
                 header(sprintf('Status: %s', Slim_Http_Response::getMessageForCode($status)));
             } else {
-                header(sprintf('HTTP/%s %s', $this->config('http.version'), Slim_Http_Response::getMessageForCode($status)));
+                header(sprintf('HTTP/%s %s', HTTP_VERSION, Slim_Http_Response::getMessageForCode($status)));
             }
 
             //Send headers
@@ -1215,7 +1109,7 @@ class Slim {
         } catch ( Slim_Exception_RequestSlash $e ) {
             $this->response->redirect($this->request->getPath() . '/', 301);
         } catch ( Exception $e ) {
-            if ( $this->config('debug') ){
+            if ( DEBUG ){
                 throw $e;
             } else {
                 try { $this->error($e); } catch ( Slim_Exception_Stop $e ) {}

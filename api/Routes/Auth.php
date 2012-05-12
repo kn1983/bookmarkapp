@@ -8,10 +8,9 @@ function getAuth()
 {
 	$db = Slim::getInstance()->db();
     $request = Slim::getInstance()->request();
-    $settings = Slim::getInstance()->settings();
 
-    $user_id    = $request->cookies($settings['cookies.name'] . '_u');
-    $session_id = $request->cookies($settings['cookies.name'] . '_sid');         
+    $user_id    = $request->cookies(COOKIE_NAME . '_u');
+    $session_id = $request->cookies(COOKIE_NAME . '_sid');         
 
     $sql = "SELECT u.id, u.type, u.username, u.form_salt
             FROM sessions AS s
@@ -23,7 +22,7 @@ function getAuth()
     $result = $db->sql_query($sql);
     $data = $db->sql_fetchrow($result);
 
-    $data['logged_in'] = ($data['type'] == $settings['usergroup.new'] || $data['type'] == $settings['usergroup.normal'] || $data['type'] == $settings['usergroup.admin']) ? true : false;
+    $data['logged_in'] = ($data['type'] == USER_NEW || $data['type'] == USER_NORMAL || $data['type'] == USER_ADMIN) ? true : false;
 
     echo json_encode($data);
 }
@@ -32,7 +31,6 @@ function setAuth()
 {
 	$db = Slim::getInstance()->db();
     $request = Slim::getInstance()->request();
-    $settings = Slim::getInstance()->settings();
     $session = Slim::getInstance()->session();
 
     $validation = new Slim_Forms_FormValidator();
@@ -55,7 +53,7 @@ function setAuth()
         $sql = "SELECT id, username, password, email, type
                 FROM users
                 WHERE username_clean = '{$username_clean}'
-                AND type IN (" . $settings['usergroup.new'] . ", " . $settings['usergroup.normal'] . ", " . $settings['usergroup.admin'] . ")";
+                AND type IN (" . USER_NEW . ", " . USER_NORMAL . ", " . USER_ADMIN . ")";
         $result = $db->sql_query($sql);
         $row = $db->sql_fetchrow($result);
 
