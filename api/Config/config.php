@@ -16,7 +16,7 @@ define('DB_HOST', 'localhost');
 define('DB_PORT', '');
 define('DB_NAME', 'page');
 define('DB_USER', 'root');
-define('DB_PW', '');
+define('DB_PW', 'root');
 
 //Cookies
 define('COOKIE_NAME', 'page_kl7dk');
