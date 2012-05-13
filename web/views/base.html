@@ -6,40 +6,41 @@
             <!-- <link type="<textarea></textarea>xt/css" rel="stylesheet" href="web/css/base.css" /> -->
             <!-- <link type="text/css" rel="stylesheet" href="web/css/header.css" /> -->
             <!-- <link type="text/css" rel="stylesheet" href="web/css/forms.css" /> -->
+            <link type="text/css" rel="stylesheet" href="web/css/temporaryCss.css" />
         {% endblock %}
     </head>
     <body id="body">
+        <div id="container">
+            {% block header %}
+            <div id="header">
 
-        {% block header %}
-        <div id="header">
+            </div>
+            {% endblock %} 
 
+            <div id="sidebarFirst">
+                {% block sidebarFirst %}
+                    Sidebar first
+                {% endblock %}
+            </div>
+
+            <div id="content">
+            	{% block content %}
+                    Content
+                {% endblock %}
+            </div>
+
+            <div id="sidebarSecond">
+                {% block sidebarSecond %}
+                    Sidebar second
+                {% endblock %}
+            </div>
+
+            <div id="footer">
+                {% block footer %}
+                   footer
+                {% endblock %}
+            </div>
         </div>
-        {% endblock %} 
-
-        <div id="sidebarFirst">
-            {% block sidebarFirst %}
-                Sidebar first
-            {% endblock %}
-        </div>
-
-        <div id="content">
-        	{% block content %}
-                Content
-            {% endblock %}
-        </div>
-
-        <div id="sidebarSecond">
-            {% block sidebarSecond %}
-                Sidebar second
-            {% endblock %}
-        </div>
-
-        <div id="footer">
-            {% block footer %}
-               footer
-            {% endblock %}
-        </div>
-
         {% block scripts %}
             <script type="text/javascript" data-main="web/js/main" src="web/js/libs/require.js"></script>
         {% endblock %}        

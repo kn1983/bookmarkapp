@@ -28,48 +28,48 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
         ";
         // line 4
         $this->displayBlock('head', $context, $blocks);
-        // line 10
+        // line 11
         echo "    </head>
     <body id=\"body\">
-
-        ";
-        // line 13
+        <div id=\"container\">
+            ";
+        // line 14
         $this->displayBlock('header', $context, $blocks);
-        // line 17
+        // line 18
         echo " 
 
-        <div id=\"sidebarFirst\">
-            ";
-        // line 20
+            <div id=\"sidebarFirst\">
+                ";
+        // line 21
         $this->displayBlock('sidebarFirst', $context, $blocks);
-        // line 23
-        echo "        </div>
+        // line 24
+        echo "            </div>
 
-        <div id=\"content\">
-        \t";
-        // line 26
+            <div id=\"content\">
+            \t";
+        // line 27
         $this->displayBlock('content', $context, $blocks);
-        // line 29
-        echo "        </div>
+        // line 30
+        echo "            </div>
 
-        <div id=\"sidebarSecond\">
-            ";
-        // line 32
+            <div id=\"sidebarSecond\">
+                ";
+        // line 33
         $this->displayBlock('sidebarSecond', $context, $blocks);
-        // line 35
-        echo "        </div>
+        // line 36
+        echo "            </div>
 
-        <div id=\"footer\">
-            ";
-        // line 38
+            <div id=\"footer\">
+                ";
+        // line 39
         $this->displayBlock('footer', $context, $blocks);
-        // line 41
-        echo "        </div>
-
+        // line 42
+        echo "            </div>
+        </div>
         ";
-        // line 43
+        // line 44
         $this->displayBlock('scripts', $context, $blocks);
-        // line 45
+        // line 46
         echo "        
     </body>
 </html>";
@@ -90,55 +90,56 @@ class __TwigTemplate_53bb5b696263cf89f696391d898e15f1 extends Twig_Template
             <!-- <link type=\"<textarea></textarea>xt/css\" rel=\"stylesheet\" href=\"web/css/base.css\" /> -->
             <!-- <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/header.css\" /> -->
             <!-- <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/forms.css\" /> -->
+            <link type=\"text/css\" rel=\"stylesheet\" href=\"web/css/temporaryCss.css\" />
         ";
     }
 
-    // line 13
+    // line 14
     public function block_header($context, array $blocks = array())
     {
-        // line 14
-        echo "        <div id=\"header\">
+        // line 15
+        echo "            <div id=\"header\">
 
-        </div>
-        ";
+            </div>
+            ";
     }
 
-    // line 20
+    // line 21
     public function block_sidebarFirst($context, array $blocks = array())
     {
-        // line 21
-        echo "                Sidebar first
-            ";
+        // line 22
+        echo "                    Sidebar first
+                ";
     }
 
-    // line 26
+    // line 27
     public function block_content($context, array $blocks = array())
     {
-        // line 27
-        echo "                Content
-            ";
+        // line 28
+        echo "                    Content
+                ";
     }
 
-    // line 32
+    // line 33
     public function block_sidebarSecond($context, array $blocks = array())
     {
-        // line 33
-        echo "                Sidebar second
-            ";
+        // line 34
+        echo "                    Sidebar second
+                ";
     }
 
-    // line 38
+    // line 39
     public function block_footer($context, array $blocks = array())
     {
-        // line 39
-        echo "               footer
-            ";
+        // line 40
+        echo "                   footer
+                ";
     }
 
-    // line 43
+    // line 44
     public function block_scripts($context, array $blocks = array())
     {
-        // line 44
+        // line 45
         echo "            <script type=\"text/javascript\" data-main=\"web/js/main\" src=\"web/js/libs/require.js\"></script>
         ";
     }

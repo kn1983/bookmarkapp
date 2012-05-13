@@ -13,7 +13,8 @@ define([
 			"": "content",
 			"!/bookmarks": "bookmarks",
 			"!/register": "register",
-			"!/addbookmark": "addBookmark"
+			"!/addbookmark": "addBookmark",
+			"!/mybookmarks": "mybookmarks"
 		},
 		initialize: function(){
 			var self = this;
@@ -38,17 +39,35 @@ define([
 			});
 		},
 		addBookmark: function(){
+			console.debug("add dialog");
 			var self = this;
+			// self.currentDialog = new BookmarkDialogView({model: new Bookmark()});
+			// $("body").append(self.currentDialog.render().el);
+
 			this.before(function(){
 				self.before2(function(){
 					if(self.loggedIn){
 						if(self.bookmarks){
 							self.bookmarks = new Bookmarks();
 						}
-						$("body").append(new BookmarkDialogView({model: new Bookmark(), collection: self.bookmarks}).render().el);
+						// if(!self.currentDialog){
+							self.currentDialog = new BookmarkDialogView({model: new Bookmark(), collection: self.bookmarks});
+						// } else {
+						// 	console.debug(self);
+						// 	console.debug("not exist");
+						// }
+						$("body").append(self.currentDialog.render().el);
 					}
 				});
 			});
+		},
+		mybookmarks: function(){
+			if(this.currentDialog){
+				console.debug("true");
+			} else {
+				console.debug("false");
+			}
+			console.debug("mybookmarks");
 		},
 		before: function(callback){
 			var self = this;

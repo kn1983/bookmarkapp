@@ -1,0 +1,50 @@
+html,
+body {
+	height: 100%;
+}
+#container {
+	width: 950px;
+	margin: 0 auto;
+}
+#header {
+	background-color: #ff00ff;
+}
+#sidebarFirst,
+#sidebarSecond {
+	width: 250px;
+	background-color: #ff0000;
+}
+#sidebarFirst,
+#content {
+	float: left;
+}
+#sidebarSecond {
+	float: right;
+}
+#content {
+	width: 450px;
+	background-color: #ccc;
+}
+#footer {
+	clear: both;
+	background-color: yellow;
+}
+
+/* Bookmark dialog */
+.bookmark-dialog {
+	width: 300px;
+	position: fixed;
+	top: 100px;
+	left: 50%;
+	margin-left: -150px;
+	background-color: silver;
+}
+.dialogOverlay {
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	opacity: 0.5;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
