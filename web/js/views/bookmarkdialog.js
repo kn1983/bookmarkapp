@@ -38,30 +38,42 @@ define(['text!tpls/bookmarkDialog.html'],function(bookmarkDialogTpl){
 			history.back();
 		},
 		events: {
-			// "keydown #bookmarkurl": "getPageTitle",
+			"keyup #bookmarkurl": "getPageTitle",
 			"click .saveBookmark": "save",
 			"click .cancel": "cancel"
 		},
-		// getPageTitle: function(){
-		// 	var url = $("#bookmarkurl").val();
-		// 	if(url.substring(0, 3) === 'www'){
-		// 		url = 'http://' + url;
-		// 	}
-		// 	if(url === ''){
-		// 		$("#bookmarktitle").val("");
-		// 	} else {
-		// 		$.ajax({
-		// 			type: "POST",
-		// 			url: "web/getUrlTitle.php",
-		// 			data: {url: url},
-		// 			success: function(data){
-		// 				$("#bookmarktitle").val(data);
-		// 			}
-		// 		});
-		// 	}
-		// },
+		getPageTitle: function(){
+			var url = $("#bookmarkurl").val(),
+				saveBtn = $(".saveBookmark");
+			if(this.validateUrl(url)){
+				// if(url.substring(0, 3) === 'www'){
+				// 	url = 'http://' + url;
+				// }
+				if(url === ''){
+					$("#bookmarktitle").val("");
+				} else {
+					$.ajax({
+						type: "POST",
+						url: "web/getUrlTitle.php",
+						data: {url: url},
+						dataType: "json",
+						success: function(data){
+							if(data.urltitle){
+								saveBtn.removeAttr("disabled");
+								$("#bookmarktitle").val(data.urltitle);
+							}
+						}
+					});
+				}
+			} else {
+				if(!saveBtn.attr("disabled")){
+					saveBtn.attr("disabled", "disabled");
+				}
+			}
+		},
 		validateUrl: function(url){
-			var urlregex = new RegExp("^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)");
+			var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+			var urlregex = new RegExp(expression);
 			return urlregex.test(url);
 		}
 	});
