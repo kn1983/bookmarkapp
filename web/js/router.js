@@ -39,7 +39,6 @@ define([
 			});
 		},
 		addBookmark: function(){
-			console.debug("add dialog");
 			var self = this;
 			// self.currentDialog = new BookmarkDialogView({model: new Bookmark()});
 			// $("body").append(self.currentDialog.render().el);
