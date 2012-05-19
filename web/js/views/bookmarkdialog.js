@@ -46,9 +46,6 @@ define(['text!tpls/bookmarkDialog.html'],function(bookmarkDialogTpl){
 			var url = $("#bookmarkurl").val(),
 				saveBtn = $(".saveBookmark");
 			if(this.validateUrl(url)){
-				// if(url.substring(0, 3) === 'www'){
-				// 	url = 'http://' + url;
-				// }
 				if(url === ''){
 					$("#bookmarktitle").val("");
 				} else {
@@ -60,6 +57,9 @@ define(['text!tpls/bookmarkDialog.html'],function(bookmarkDialogTpl){
 						success: function(data){
 							if(data.urltitle){
 								saveBtn.removeAttr("disabled");
+								if(url !== data.url){
+									$("#bookmarkurl").val(data.url);
+								}
 								$("#bookmarktitle").val(data.urltitle);
 							}
 						}
@@ -68,6 +68,7 @@ define(['text!tpls/bookmarkDialog.html'],function(bookmarkDialogTpl){
 			} else {
 				if(!saveBtn.attr("disabled")){
 					saveBtn.attr("disabled", "disabled");
+					$("#bookmarktitle").val("");
 				}
 			}
 		},
